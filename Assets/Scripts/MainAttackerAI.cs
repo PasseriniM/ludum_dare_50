@@ -25,6 +25,7 @@ public class MainAttackerAI : MonoBehaviour
     {
         lastPosition = mapManager.map.WorldToCell(transform.position);
         mapManager.logicGrid.Subscribe(lastPosition, gameObject);
+        movingScript.pathManager.startPosition = lastPosition;
     }
 
     public bool IsAttacking()

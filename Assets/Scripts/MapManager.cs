@@ -55,9 +55,9 @@ public class LogicGrid
 
     public void FillAdjacencyList(Vector3Int curPosition,Vector3Int startDirection, out List<Vector3Int> adjacencyList)
     {
+        adjacencyList = new List<Vector3Int>();
         if (!IsValidDirection(curPosition,startDirection))
         {
-            adjacencyList = null;
             return;
         }
 
@@ -66,7 +66,6 @@ public class LogicGrid
         startDirection.x= Mathf.Clamp(startDirection.x, -1, 1);
         startDirection.y= Mathf.Clamp(startDirection.y, -1, 1);
 
-        adjacencyList = new List<Vector3Int>();
         adjacencyList.Add(startDirection);
         if (curPosition.y % 2 != 0)
         {
