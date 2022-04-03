@@ -4,6 +4,152 @@ using UnityEngine;
 using UnityEngine.Tilemaps;
 using UnityEngine.InputSystem;
 
+public class LogicGrid
+{
+    private Dictionary<Vector3Int, List<GameObject>> characterPerCell;
+
+    public bool IsValidDirection(Vector3Int direction)
+    {
+        return !((direction.x == 0 && direction.y == 0) ||
+            (direction.x == 0 && direction.y == 1) ||
+            (direction.x == 1 && direction.y == -1) ||
+            (direction.x == 1 && direction.y == -1));
+    }
+
+    public void FillAdjacencyList(Vector3Int startDirection, out List<Vector3Int> adjacencyList)
+    {
+        if (!IsValidDirection(startDirection))
+        {
+            adjacencyList = null;
+            return;
+        }
+
+        startDirection.z = startDirection.z != 0 ? 0 : startDirection.z;
+
+        Mathf.Clamp(startDirection.x, -1, 1);
+        Mathf.Clamp(startDirection.y, -1, 1);
+
+        adjacencyList = new List<Vector3Int>();
+        adjacencyList.Add(startDirection);
+        if (startDirection.x == 1 && startDirection.y == 1)
+        {
+            adjacencyList.Add(new Vector3Int(-1, 1, 0));
+            adjacencyList.Add(new Vector3Int(1, 0, 0));
+            adjacencyList.Add(new Vector3Int(-1, 0, 0));
+            adjacencyList.Add(new Vector3Int(0, -1, 0));
+            adjacencyList.Add(new Vector3Int(-1, -1, 0));
+        }
+        else if( startDirection.x == 1 && startDirection.y == 0)
+        {
+            adjacencyList.Add(new Vector3Int(1, 1, 0));
+            adjacencyList.Add(new Vector3Int(0, -1, 0));
+            adjacencyList.Add(new Vector3Int(-1, 1, 0));
+            adjacencyList.Add(new Vector3Int(-1, -1, 0));
+            adjacencyList.Add(new Vector3Int(-1, 0, 0));
+        }
+        else if (startDirection.x == 0 && startDirection.y == -1)
+        {
+            adjacencyList.Add(new Vector3Int(1, 0, 0));
+            adjacencyList.Add(new Vector3Int(-1, -1, 0));
+            adjacencyList.Add(new Vector3Int(1, 1, 0));
+            adjacencyList.Add(new Vector3Int(-1, 0, 0));
+            adjacencyList.Add(new Vector3Int(-1, 1, 0));
+        }
+        else if (startDirection.x == -1 && startDirection.y == -1)
+        {
+            adjacencyList.Add(new Vector3Int(0, -1, 0));
+            adjacencyList.Add(new Vector3Int(-1, 0, 0));
+            adjacencyList.Add(new Vector3Int(1, 0, 0));
+            adjacencyList.Add(new Vector3Int(-1, 1, 0));
+            adjacencyList.Add(new Vector3Int(1, 1, 0));
+        }
+        else if (startDirection.x == -1 && startDirection.y == 0)
+        {
+            adjacencyList.Add(new Vector3Int(-1, -1, 0));
+            adjacencyList.Add(new Vector3Int(-1, 1, 0));
+            adjacencyList.Add(new Vector3Int(0, -1, 0));
+            adjacencyList.Add(new Vector3Int(1, 1, 0));
+            adjacencyList.Add(new Vector3Int(1, 0, 0));
+        }
+        else if (startDirection.x == -1 && startDirection.y == 1)
+        {
+            adjacencyList.Add(new Vector3Int(-1, 0, 0));
+            adjacencyList.Add(new Vector3Int(1, 1, 0));
+            adjacencyList.Add(new Vector3Int(-1, -1, 0));
+            adjacencyList.Add(new Vector3Int(1, 0, 0));
+            adjacencyList.Add(new Vector3Int(0, -1, 0));
+        }
+
+    }
+    public void Subscribe(Vector3Int position, GameObject gameObject)
+    {
+        List<GameObject> characters;
+        if(characterPerCell.TryGetValue(position, out characters))
+        {
+            characters.Add(gameObject);
+        }
+        else
+        {
+            characters = new List<GameObject>();
+            characters.Add(gameObject);
+            characterPerCell.Add(position, characters);
+        }
+    }
+
+    public bool IsCellOccupied(Vector3Int position, out List<GameObject> characters)
+    {
+        characters = null;
+        if (characterPerCell.TryGetValue(position, out characters))
+        {
+            return true;
+        }
+        return false;
+    }
+
+    public void Unsubscribe(Vector3Int position, GameObject gameObject)
+    {
+        List<GameObject> characters;
+        if (characterPerCell.TryGetValue(position, out characters))
+        {
+            characters.Remove(gameObject);
+        }
+    }
+
+    public void GetPrioritySurroundingCharacters(Vector3Int position, Vector3Int startDirection, out Vector3Int priorityDirection, out List<GameObject> characters)
+    {
+        characters = new List<GameObject>();
+        priorityDirection = startDirection;
+        List<Vector3Int> adjacencyRules;
+        FillAdjacencyList(startDirection, out adjacencyRules);
+        foreach(Vector3Int dir in adjacencyRules)
+        {
+            List<GameObject> partialCharacters;
+            if (characterPerCell.TryGetValue(position, out partialCharacters))
+            {
+                priorityDirection = dir;
+                characters.AddRange(partialCharacters);
+                return;
+            }
+        }
+    }
+
+    public void GetAllSurroundingCharacters(Vector3Int position, Vector3Int startDirection, out List<GameObject> characters)
+    {
+        characters = new List<GameObject>();
+        List<Vector3Int> adjacencyRules;
+        FillAdjacencyList(startDirection, out adjacencyRules);
+        foreach (Vector3Int dir in adjacencyRules)
+        {
+            List<GameObject> partialCharacters;
+            if (characterPerCell.TryGetValue(position, out partialCharacters))
+            {
+                characters.AddRange(partialCharacters);
+            }
+        }
+    }
+
+}
+
 public class MapManager : MonoBehaviour
 {
     [SerializeField]
@@ -16,6 +162,8 @@ public class MapManager : MonoBehaviour
     private List<TileData> tileDatas;
 
     private Dictionary<TileBase, TileData> dataFromTiles;
+
+    public LogicGrid logicGrid = new LogicGrid();
 
     Vector2 mousePosition;
     Vector3 mouseWorldPosition;
@@ -69,9 +217,6 @@ public class MapManager : MonoBehaviour
 
         TileBase clickedTile = map.GetTile(gridPosition);
 
-        float speedModifier = dataFromTiles[clickedTile].speedModifier;
-        float poisonModifier = dataFromTiles[clickedTile].poisonModifier;
-
-        print("Position " + gridPosition + " there is a " + clickedTile + " which has speed mod " + speedModifier + " and poison mod "+ poisonModifier);
+        print("Position " + gridPosition + " there is a " + clickedTile);
     }
 }

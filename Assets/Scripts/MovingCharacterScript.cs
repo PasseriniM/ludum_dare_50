@@ -40,7 +40,7 @@ public class PathAndPositionManager
         result.y += yOffset;
         return result;
     }
-    public Vector3Int GetCurrentLastFacingDirection() { return facingDirection; }
+    public bool IsMoving() { return currentIndex >= 0 && !HasArrived(); }
     public bool HasArrived() { return currentIndex >= cellList.Count; }
     public void UpdateCurrentPosition(Vector3 updatedCurrentPosition)
     { 
@@ -49,7 +49,7 @@ public class PathAndPositionManager
     }
     public bool TryAdvancePath()
     {
-        if (currentIndex >= 0 && !HasArrived() && currentPosition == GetCurrentTargetCell())
+        if (IsMoving() && currentPosition == GetCurrentTargetCell())
         {
             //we need to check if we're close enough to the center of the cell
              Vector3 distanceVec = GetCurrentTarget()-currentWorldPosition;
@@ -64,7 +64,14 @@ public class PathAndPositionManager
         return false;
     }   
     
-    private void UpdateFacingDirection() { facingDirection = GetCurrentTargetCell() - currentPosition; }
+    private void UpdateFacingDirection() 
+    {
+        Vector3Int newFacing =  GetCurrentTargetCell() - currentPosition;
+        if(mapManager.logicGrid.IsValidDirection(newFacing))
+        {
+            facingDirection = newFacing;
+        }
+    }
 
     public Vector3 currentWorldPosition = new Vector3(0, 0, 0);
 
@@ -72,7 +79,7 @@ public class PathAndPositionManager
     public List<Vector3Int> cellList;
     public Vector3Int startPosition = new Vector3Int(0, 0, 0);
     public Vector3Int currentPosition = new Vector3Int(0, 0, 0);
-    public Vector3Int facingDirection = new Vector3Int(0, 0, 0 );
+    public Vector3Int facingDirection = new Vector3Int(1, 0, 0 );
 
     private float yOffset = 0.1f;
 }
@@ -83,12 +90,14 @@ public class MovingCharacterScript : MonoBehaviour
 
     //base speed in grid cells per second
     public float baseSpeed;
+    public enum FactionType { Hero, Enemy };
+    public FactionType faction;
 
     public PathAndPositionManager pathManager = new PathAndPositionManager();
 
     float amountToMoveTowardsTarget = 0f;
 
-void Awake()
+    void Awake()
     {
         mapManager = FindObjectOfType<MapManager>();
         pathManager.mapManager = mapManager;
