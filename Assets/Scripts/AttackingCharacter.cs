@@ -59,7 +59,7 @@ public class AttackingCharacter : MonoBehaviour
         return result;
     }
 
-    private GameObject GetNextTarget()
+    private void GetNextTarget()
     {
         List<GameObject> priorityTargets;
         Vector3Int newFacingDirection;
@@ -67,17 +67,15 @@ public class AttackingCharacter : MonoBehaviour
             movingCharacter.pathManager.facingDirection, out newFacingDirection,
             out priorityTargets);
 
-        GameObject result = null;
+        currentTarget = null;
         if (priorityTargets != null && priorityTargets.Count > 0)
         {
-            result = GetOpposingTarget(priorityTargets);
-            if(result!=null)
+            currentTarget = GetOpposingTarget(priorityTargets);
+            if(currentTarget != null)
             {
                 movingCharacter.pathManager.facingDirection = newFacingDirection;
             }
         }
-
-        return result;
     }
 
     private void FixedUpdate()
@@ -112,7 +110,7 @@ public class AttackingCharacter : MonoBehaviour
         }
         else
         {
-            currentTarget = GetNextTarget();
+            GetNextTarget();
         }
     }
 }

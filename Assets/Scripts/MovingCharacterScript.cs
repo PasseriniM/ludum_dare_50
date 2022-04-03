@@ -78,7 +78,7 @@ public class PathAndPositionManager
         {
             //we need to check if we're close enough to the center of the cell
              Vector3 distanceVec = GetCurrentTarget()-currentWorldPosition;
-             if(distanceVec.sqrMagnitude<float.Epsilon)
+             if(distanceVec.sqrMagnitude<0.00001f)
              {
                 currentIndex++;
                 UpdateFacingDirection();
@@ -142,21 +142,27 @@ public class MovingCharacterScript : MonoBehaviour
         lastPath = pathManager.cellList;
     }
 
-    public void ResumeOldPath()
+    public List<Vector3Int> GetOldTrimmedPath()
     {
-        List<Vector3Int> trimmedPath = new List<Vector3Int>();
+        List<Vector3Int> trimmedPath = new List<Vector3Int>(); 
         bool addNextCell = false;
-        foreach(Vector3Int cell in lastPath)
+        foreach (Vector3Int cell in lastPath)
         {
-            if(addNextCell)
+            if (addNextCell)
             {
                 trimmedPath.Add(cell);
             }
-            if(cell==pathManager.currentPosition)
+            if (cell == pathManager.currentPosition)
             {
                 addNextCell = true;
             }
         }
+        return trimmedPath;
+    }
+
+    public void ResumeOldPath()
+    {
+        List<Vector3Int> trimmedPath = GetOldTrimmedPath();
         
         if(trimmedPath.Count>0)
         {
@@ -210,6 +216,7 @@ public class MovingCharacterScript : MonoBehaviour
         float currentSpeed = baseSpeed * mapManager.GetSpeedModifier(pathManager.currentPosition);
         float amountToMoveTowardsTarget = currentSpeed * Time.deltaTime;
         amountToMove += amountToMoveTowardsTarget;
+        amountToMove = Mathf.Clamp(amountToMove, 0f, 1f);
         transform.position = Vector3.Lerp(pathManager.GetPreviousTarget(), pathManager.GetCurrentTarget(), amountToMove);
     }
 }

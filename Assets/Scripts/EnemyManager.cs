@@ -2,27 +2,31 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[System.Serializable]
-public class EnemySpawningEntry
-{
-    public GameObject gameObject;
-    public Vector3Int spawnPoint;
-    public List<Vector3Int> path;
-}
-
 public class EnemyManager : MonoBehaviour
 {
-    public List<EnemySpawningEntry> enemyList;
+    public List<GameObject> enemyList;
 
     private List<GameObject> spawnedEnemies = new List<GameObject>();
 
     private MapManager mapManager;
     private HQCharacterAI characterHQ;
 
+    public int SpawnGridXMin;
+    public int SpawnGridXMax;
+    public int SpawnGridYMin;
+    public int SpawnGridYMax;
+
+    public float spawnIntervalInitial;
+    public float spawnIntervalDecreaseAfterEachSpawn;
+
+    private float currentWaitTime = 0f;
+    private float currentInterval;
+
     private void Awake()
     {
         mapManager = FindObjectOfType<MapManager>();
         characterHQ = FindObjectOfType<HQCharacterAI>();
+        currentInterval = spawnIntervalInitial;
     }
 
     public Vector3Int GetCloserDirection(Vector3Int startPos, Vector3Int endPos, List<Vector3Int> directions)
@@ -43,6 +47,20 @@ public class EnemyManager : MonoBehaviour
             return result;
         }
         return startPos;
+    }
+
+    public Vector3Int GetRandomStartPosition()
+    {
+        Vector3Int position = new Vector3Int(0, 0, 0);
+        if(Random.Range(0f,1f)>0.5f)
+        {
+            position.x = Mathf.RoundToInt(Random.Range(SpawnGridXMin, SpawnGridXMax));
+        }
+        else
+        {
+            position.y = Mathf.RoundToInt(Random.Range(SpawnGridYMin, SpawnGridYMax));
+        }
+        return position;
     }
 
     private void CreatePathToHQ(Vector3Int startPos, out List<Vector3Int> path)
@@ -72,33 +90,48 @@ public class EnemyManager : MonoBehaviour
     }
 
     // Start is called before the first frame update
-    void Start()
+    private void SpawnRandomCharacter()
     {
-        foreach(EnemySpawningEntry enemy in enemyList)
+        int characterToSpawnIndex = Mathf.RoundToInt(Random.Range(0, enemyList.Count-1));
+        GameObject objectPrefab = enemyList[characterToSpawnIndex];
+        Vector3Int startCell = GetRandomStartPosition();
+
+        List<GameObject> characters;
+        if(mapManager.logicGrid.IsCellOccupied(startCell, out characters))
         {
-            Vector3 position = mapManager.map.CellToWorld(enemy.spawnPoint);
-            position.z = 0f;
-            GameObject enemyInstance = Instantiate(enemy.gameObject, position, Quaternion.identity,transform);
-            MovingCharacterScript movingScript = enemyInstance.GetComponent<MovingCharacterScript>();
-            movingScript.pathManager.UpdateCurrentPosition(position);
-            if (enemy.path!=null && enemy.path.Count>0)
+            //Try one more time
+            startCell = GetRandomStartPosition();
+            if (mapManager.logicGrid.IsCellOccupied(startCell, out characters))
             {
-                movingScript.StartPath(enemy.path);
+                return;
             }
-            else
-            {
-                List<Vector3Int> path;
-                CreatePathToHQ(enemy.spawnPoint, out path);
-                movingScript.StartPath(path);
-            }
-            movingScript.MemorizeBackupPath();
-            spawnedEnemies.Add(enemyInstance);
         }
+
+        Vector3 position = mapManager.map.CellToWorld(startCell);
+        position.z = 0f;
+        GameObject enemyInstance = Instantiate(objectPrefab, position, Quaternion.identity, transform);
+        MovingCharacterScript movingScript = enemyInstance.GetComponent<MovingCharacterScript>();
+        movingScript.pathManager.UpdateCurrentPosition(position);
+
+        List<Vector3Int> path;
+        CreatePathToHQ(startCell, out path);
+        movingScript.StartPath(path);
+
+        movingScript.MemorizeBackupPath();
+        spawnedEnemies.Add(enemyInstance);
+    }
+
+    private static bool IsNullObject(GameObject targetObject)
+    {
+        return targetObject == null;
     }
 
     private void FixedUpdate()
     {
-        for(int i=0; i<spawnedEnemies.Count; i++)
+        System.Predicate<GameObject> predicate = IsNullObject;
+        spawnedEnemies.RemoveAll(predicate);
+
+        for (int i=0; i<spawnedEnemies.Count; i++)
         {
             GameObject spawnedEnemy = spawnedEnemies[i];
             if(spawnedEnemy !=null)
@@ -109,9 +142,38 @@ public class EnemyManager : MonoBehaviour
                     !movingScript.pathManager.IsMoving() && 
                     !movingScript.HasReachedBackupPathDestination())
                 {
-                    movingScript.ResumeOldPath();
+                    List<Vector3Int> trimmedPath = movingScript.GetOldTrimmedPath();
+                    List<GameObject> occupying;
+                    bool obstructed = false;
+                    if(mapManager.logicGrid.IsCellOccupied(trimmedPath[0],out occupying))
+                    {
+                        foreach(GameObject obstruction in occupying)
+                        {
+                            if (obstruction != spawnedEnemy)
+                            {
+                                MainAttackerAI attacker = obstruction.GetComponent<MainAttackerAI>();
+                                if (attacker != null && !attacker.IsDead())
+                                {
+                                    obstructed = true ;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    if(!obstructed)
+                    {
+                        movingScript.ResumeOldPath();
+                    }
                 }
             }
+        }
+
+        currentWaitTime += Time.fixedDeltaTime;
+        if(currentWaitTime>=currentInterval)
+        {
+            currentWaitTime = 0f;
+            SpawnRandomCharacter();
+            currentInterval -= spawnIntervalDecreaseAfterEachSpawn;
         }
     }
 

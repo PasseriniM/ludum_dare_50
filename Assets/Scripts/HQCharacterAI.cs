@@ -76,6 +76,7 @@ public class HQCharacterAI : MonoBehaviour
     private void DeadUpdate()
     {
         //nothing. Play animation? Destroy?
+        //This should trigger a "Game Over" screen
         //Destroy(gameObject);
     }
 }
