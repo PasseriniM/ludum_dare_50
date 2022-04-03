@@ -1385,6 +1385,7 @@ GameObject:
   - component: {fileID: 534669904}
   - component: {fileID: 534669903}
   - component: {fileID: 534669906}
+  - component: {fileID: 534669907}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: Untagged
@@ -1527,6 +1528,18 @@ MonoBehaviour:
   m_DefaultActionMap: UI
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
+--- !u!114 &534669907
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 534669902}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ac1b620ab8bc94e4fb69e7a0c9ae125a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &557287934
 GameObject:
   m_ObjectHideFlags: 0
@@ -9317,6 +9330,8 @@ GameObject:
   - component: {fileID: 1923831797}
   - component: {fileID: 1923831801}
   - component: {fileID: 1923831800}
+  - component: {fileID: 1923831802}
+  - component: {fileID: 1923831803}
   m_Layer: 0
   m_Name: ExtraProps_190
   m_TagString: Untagged
@@ -9336,7 +9351,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 39430585fdb8a4849853a8b6ba69d087, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  timeBetweenCells: 0
+  timeBetweenCells: 1
   faction: 0
 --- !u!212 &1923831798
 SpriteRenderer:
@@ -9429,6 +9444,31 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   health: 10
+--- !u!114 &1923831802
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1923831796}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 619cfaece14a0fc4593dba881a67f244, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  attackerType: 1
+--- !u!114 &1923831803
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1923831796}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: af7dd02b95eccb24e98ba0ac059d21e9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1932327218
 GameObject:
   m_ObjectHideFlags: 0

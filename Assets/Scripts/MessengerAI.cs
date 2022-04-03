@@ -19,6 +19,10 @@ public class MessengerAI : MonoBehaviour
         movingScript = GetComponent<MovingCharacterScript>();
         healthScript = GetComponent<HealthScript>();
         mapManager = FindObjectOfType<MapManager>();
+    }
+
+    void Start()
+    {
         lastPosition = mapManager.map.WorldToCell(transform.position);
         mapManager.logicGrid.Subscribe(lastPosition, gameObject);
     }

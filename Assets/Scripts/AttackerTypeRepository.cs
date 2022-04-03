@@ -72,7 +72,7 @@ public class AttackerTypeRepository : MonoBehaviour
         AttackerType typeDefense;
     }
 
-    private Dictionary<AttackerMatch, float> bonusModifiers;
+    private Dictionary<AttackerMatch, float> bonusModifiers = new Dictionary<AttackerMatch, float>();
 
     [SerializeField]
     public List<AttackerEditorEntry> modifierList;

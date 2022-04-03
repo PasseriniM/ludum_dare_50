@@ -5,17 +5,21 @@ using UnityEngine;
 public class AttackingCharacter : MonoBehaviour
 {
     public float damagePerSecond = 1f;
-
+    
     private GameObject currentTarget = null;
 
     private MapManager mapManager;
     private MovingCharacterScript movingCharacter;
     private HealthScript healthScript;
+    private AttackTypeEntityScript attackTypeScript;
+    private AttackerTypeRepository attackTypeRepository;
 
-    void Awake()
+    private void Awake()
     {
         mapManager = FindObjectOfType<MapManager>();
+        attackTypeRepository = FindObjectOfType<AttackerTypeRepository>();
         movingCharacter = GetComponent<MovingCharacterScript>();
+        attackTypeScript = GetComponent<AttackTypeEntityScript>();
         healthScript = GetComponent<HealthScript>();
     }
 
@@ -79,9 +83,11 @@ public class AttackingCharacter : MonoBehaviour
     {
         if (currentTarget != null)
         {
-            HealthScript targetScript = currentTarget.GetComponent<HealthScript>();
-            targetScript.ApplyDamage(damagePerSecond * Time.fixedDeltaTime);
-            if (targetScript.IsDead())
+            HealthScript targetHealthScript = currentTarget.GetComponent<HealthScript>();
+            AttackerType targetAttackerType = currentTarget.GetComponent<AttackTypeEntityScript>().attackerType;
+            float modifier = attackTypeRepository.GetModifier(attackTypeScript.attackerType, targetAttackerType);
+            targetHealthScript.ApplyDamage(damagePerSecond * modifier * Time.fixedDeltaTime);
+            if (targetHealthScript.IsDead())
             {
                 currentTarget = null;
             }

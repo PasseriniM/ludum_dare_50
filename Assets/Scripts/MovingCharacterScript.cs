@@ -27,7 +27,7 @@ public class PathAndPositionManager
             UpdateFacingDirection();
         }
     }
-    public Vector3Int GetCurrentTargetCell() { return HasArrived()? currentPosition : cellList[currentIndex]; }
+    public Vector3Int GetCurrentTargetCell() { return !IsMoving()? currentPosition : cellList[currentIndex]; }
     public Vector3Int GetPreviousTargetCell()
     {
         if (currentIndex <= 0)

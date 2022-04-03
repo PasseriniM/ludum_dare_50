@@ -9,8 +9,6 @@ public class MainAttackerAI : MonoBehaviour
     private HealthScript healthScript;
     private MapManager mapManager;
 
-    public AttackerType attackerType;
-
     private enum CurrentState { Idle, Attacking, Moving, Dead };
     private CurrentState state = CurrentState.Idle;
     private Vector3Int lastPosition;
@@ -21,6 +19,10 @@ public class MainAttackerAI : MonoBehaviour
         movingScript = GetComponent<MovingCharacterScript>();
         healthScript = GetComponent<HealthScript>();
         mapManager = FindObjectOfType<MapManager>();
+    }
+
+    void Start()
+    {
         lastPosition = mapManager.map.WorldToCell(transform.position);
         mapManager.logicGrid.Subscribe(lastPosition, gameObject);
     }
@@ -147,12 +149,6 @@ public class MainAttackerAI : MonoBehaviour
     {
         //nothing. Play animation? Destroy?
         Destroy(gameObject);
-    }
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        
     }
 
     // Update is called once per frame

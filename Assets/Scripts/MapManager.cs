@@ -6,7 +6,7 @@ using UnityEngine.InputSystem;
 
 public class LogicGrid
 {
-    private Dictionary<Vector3Int, List<GameObject>> characterPerCell;
+    private Dictionary<Vector3Int, List<GameObject>> characterPerCell = new Dictionary<Vector3Int, List<GameObject>>();
 
     public bool IsValidDirection(Vector3Int direction)
     {
@@ -194,7 +194,7 @@ public class MapManager : MonoBehaviour
         float poisonModifier = 0f;
         TileBase tile = map.GetTile(cellPosition);
 
-        if (tile != null && dataFromTiles[tile] != null)
+        if (tile != null && dataFromTiles.ContainsKey(tile))
         {
             poisonModifier = dataFromTiles[tile].poisonModifier;
         }
