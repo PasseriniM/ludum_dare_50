@@ -14,6 +14,8 @@ public class EnemyManager : MonoBehaviour
 {
     public List<EnemySpawningEntry> enemyList;
 
+    private List<GameObject> spawnedEnemies = new List<GameObject>();
+
     private MapManager mapManager;
 
     private void Awake()
@@ -26,15 +28,30 @@ public class EnemyManager : MonoBehaviour
     {
         foreach(EnemySpawningEntry enemy in enemyList)
         {
-            GameObject enemyInstance = Instantiate(enemy.gameObject, mapManager.map.CellToWorld(enemy.spawnPoint), Quaternion.identity);
+            Vector3 position = mapManager.map.CellToWorld(enemy.spawnPoint);
+            position.z = 0f;
+            GameObject enemyInstance = Instantiate(enemy.gameObject, position, Quaternion.identity);
             MovingCharacterScript movingScript = enemyInstance.GetComponent<MovingCharacterScript>();
             movingScript.StartPath(enemy.path);
+            movingScript.MemorizeBackupPath();
+            spawnedEnemies.Add(enemyInstance);
         }
     }
 
     private void FixedUpdate()
     {
-        
+        for(int i=0; i<spawnedEnemies.Count; i++)
+        {
+            GameObject spawnedEnemy = spawnedEnemies[i];
+            if(spawnedEnemy !=null)
+            {
+                MovingCharacterScript movingScript = spawnedEnemy.GetComponent<MovingCharacterScript>();
+                if(!movingScript.pathManager.IsMoving() && !movingScript.HasReachedBackupPathDestination())
+                {
+                    movingScript.ResumeOldPath();
+                }
+            }
+        }
     }
 
     // Update is called once per frame

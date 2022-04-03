@@ -108,6 +108,7 @@ public class MovingCharacterScript : MonoBehaviour
     public FactionType faction;
 
     public PathAndPositionManager pathManager = new PathAndPositionManager();
+    private List<Vector3Int> lastPath;
 
     float amountToMoveTowardsTarget = 0f;
 
@@ -120,18 +121,49 @@ public class MovingCharacterScript : MonoBehaviour
     private void Start()
     {
         pathManager.UpdateCurrentPosition(transform.position);
-        List<Vector3Int> newList = new List<Vector3Int>();
-        Vector3Int position1 = new Vector3Int(6, 2, 0);
-        Vector3Int position2 = new Vector3Int(6, 3, 0);
-        newList.Add(position1);
-        newList.Add(position2);
-        StartPath(newList);
     }
 
     public void StartPath(List<Vector3Int> newPath)
     {
         pathManager.cellList = newPath;
         pathManager.Start();
+    }
+
+    public void MemorizeBackupPath()
+    {
+        lastPath = pathManager.cellList;
+    }
+
+    public void ResumeOldPath()
+    {
+        List<Vector3Int> trimmedPath = new List<Vector3Int>();
+        bool addNextCell = false;
+        foreach(Vector3Int cell in lastPath)
+        {
+            if(addNextCell)
+            {
+                trimmedPath.Add(cell);
+            }
+            if(cell==pathManager.currentPosition)
+            {
+                addNextCell = true;
+            }
+        }
+        
+        if(trimmedPath.Count>0)
+        {
+            StartPath(trimmedPath);
+        }
+        else
+        {
+            StartPath(lastPath);
+        }
+        MemorizeBackupPath();
+    }
+
+    public bool HasReachedBackupPathDestination()
+    {
+        return pathManager.currentPosition == lastPath[lastPath.Count - 1];
     }
 
     private void FixedUpdate()
