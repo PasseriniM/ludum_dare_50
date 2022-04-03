@@ -95,7 +95,7 @@ public class PathAndPositionManager
     public Vector3Int currentPosition = new Vector3Int(0, 0, 0);
     public Vector3Int facingDirection = new Vector3Int(1, 0, 0 );
 
-    private float yOffset = 0.1f;
+    private float yOffset = 0;
 }
 
 public class MovingCharacterScript : MonoBehaviour
