@@ -12,6 +12,7 @@ public class AttackingCharacter : MonoBehaviour
     private MovingCharacterScript movingCharacter;
     private HealthScript healthScript;
     private AttackTypeEntityScript attackTypeScript;
+    private FactionScript factionScript;
     private AttackerTypeRepository attackTypeRepository;
 
     private void Awake()
@@ -21,6 +22,7 @@ public class AttackingCharacter : MonoBehaviour
         movingCharacter = GetComponent<MovingCharacterScript>();
         attackTypeScript = GetComponent<AttackTypeEntityScript>();
         healthScript = GetComponent<HealthScript>();
+        factionScript = GetComponent<FactionScript>();
     }
 
     // Start is called before the first frame update
@@ -49,8 +51,8 @@ public class AttackingCharacter : MonoBehaviour
                 }
             }
         }
-        MovingCharacterScript script = result.GetComponent<MovingCharacterScript>();
-        if(script.faction == movingCharacter.faction)
+        FactionScript script = result.GetComponent<FactionScript>();
+        if(factionScript.faction == script.faction)
         {
             return null;
         }
@@ -82,13 +84,23 @@ public class AttackingCharacter : MonoBehaviour
     {
         if (currentTarget != null)
         {
-            MovingCharacterScript targetMovingScript = currentTarget.GetComponent<MovingCharacterScript>();
-            Vector3Int dir = targetMovingScript.pathManager.currentPosition - movingCharacter.pathManager.currentPosition;
-            if(!LogicGrid.IsValidDirection(movingCharacter.pathManager.currentPosition,dir))
+            HQCharacterAI hqTarget = currentTarget.GetComponent<HQCharacterAI>();
+            if(hqTarget!=null)
             {
-                currentTarget = null;
-                return;
+                //Any special modifier?
             }
+
+            MovingCharacterScript targetMovingScript = currentTarget.GetComponent<MovingCharacterScript>();
+            if(targetMovingScript!=null)
+            {
+                Vector3Int dir = targetMovingScript.pathManager.currentPosition - movingCharacter.pathManager.currentPosition;
+                if (!LogicGrid.IsValidDirection(movingCharacter.pathManager.currentPosition, dir))
+                {
+                    currentTarget = null;
+                    return;
+                }
+            }
+
             HealthScript targetHealthScript = currentTarget.GetComponent<HealthScript>();
             AttackerType targetAttackerType = currentTarget.GetComponent<AttackTypeEntityScript>().attackerType;
             float modifier = attackTypeRepository.GetModifier(attackTypeScript.attackerType, targetAttackerType);

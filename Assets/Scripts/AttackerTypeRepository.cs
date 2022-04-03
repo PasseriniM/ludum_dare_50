@@ -2,12 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum AttackerType { Rider, Infantry, Piker };
+public enum AttackerType { Rider, Infantry, Piker, HQ };
 
 [System.Serializable]
 public class AttackerEditorEntry
 {
-  public   AttackerType typeAttack;
+  public  AttackerType typeAttack;
   public  AttackerType typeDefense;
   public  float modifier;
 }

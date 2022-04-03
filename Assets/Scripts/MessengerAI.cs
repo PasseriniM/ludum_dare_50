@@ -5,6 +5,7 @@ using UnityEngine;
 public class MessengerAI : MonoBehaviour
 {
     private MovingCharacterScript movingScript;
+    private FactionScript factionScript;
     private HealthScript healthScript;
     private MapManager mapManager;
 
@@ -18,6 +19,7 @@ public class MessengerAI : MonoBehaviour
     {
         movingScript = GetComponent<MovingCharacterScript>();
         healthScript = GetComponent<HealthScript>();
+        factionScript = GetComponent<FactionScript>();
         mapManager = FindObjectOfType<MapManager>();
     }
 
@@ -52,9 +54,9 @@ public class MessengerAI : MonoBehaviour
             {
                 if(possibleAlly!=gameObject)
                 {
-                    MovingCharacterScript script = possibleAlly.GetComponent<MovingCharacterScript>();
+                    FactionScript targetFactionScript = possibleAlly.GetComponent<FactionScript>();
                     MainAttackerAI attacker = possibleAlly.GetComponent<MainAttackerAI>();
-                    if (script.faction == movingScript.faction && attacker!=null)
+                    if (factionScript.faction == targetFactionScript.faction && attacker!=null)
                     {
                         occupants.Add(possibleAlly);
                     }
@@ -148,6 +150,7 @@ public class MessengerAI : MonoBehaviour
     private void DeadUpdate()
     {
         //nothing. Play animation? Destroy?
+        mapManager.logicGrid.Unsubscribe(lastPosition, gameObject);
         Destroy(gameObject);
     }
 }

@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 8818011165675220044}
   - component: {fileID: 1171607871369385250}
   - component: {fileID: 8056131628115968838}
+  - component: {fileID: -6219293883402920356}
   m_Layer: 0
   m_Name: EnemyRider
   m_TagString: Untagged
@@ -76,7 +77,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   timeBetweenCells: 1
-  faction: 1
 --- !u!114 &8818011165675220044
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -153,6 +153,19 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &-6219293883402920356
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8174229828798647877}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 36943d73fbcf4894d8745abcd7a12996, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  faction: 1
 --- !u!1001 &2322846464214338539
 PrefabInstance:
   m_ObjectHideFlags: 0

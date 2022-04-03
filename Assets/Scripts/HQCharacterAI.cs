@@ -28,6 +28,22 @@ public class HQCharacterAI : MonoBehaviour
         }
     }
 
+    public Vector3Int GetClosestPosition(Vector3Int position)
+    {
+        float minDist = 10000000;
+        Vector3Int result = position;
+        foreach(Vector3Int cell in cellsOccupied)
+        {
+            float dist = (cell - position).magnitude;
+            if (dist < minDist)
+            {
+                minDist = dist;
+                result = cell;
+            }
+        }
+        return result;
+    }
+
     private void FixedUpdate()
     {
         switch (state)

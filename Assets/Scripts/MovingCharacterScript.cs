@@ -115,8 +115,6 @@ public class MovingCharacterScript : MonoBehaviour
 
     //seconds necessary to move from one cell to the next
     public float timeBetweenCells;
-    public enum FactionType { Hero, Enemy };
-    public FactionType faction;
 
     public PathAndPositionManager pathManager = new PathAndPositionManager();
     private List<Vector3Int> lastPath;
