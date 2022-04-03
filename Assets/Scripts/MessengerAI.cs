@@ -28,6 +28,16 @@ public class MessengerAI : MonoBehaviour
         messages.Add(position, message);
     }
 
+    public void RemoveMessage(Vector3Int position)
+    {
+        messages.Remove(position);
+    }
+
+    public void StartPath(List<Vector3Int> newPath)
+    {
+        movingScript.StartPath(newPath);
+    }
+
     public void GetAlliedOccupants(out List<GameObject> occupants)
     {
         occupants = new List<GameObject>();

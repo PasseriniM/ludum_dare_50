@@ -9,6 +9,8 @@ public class MainAttackerAI : MonoBehaviour
     private HealthScript healthScript;
     private MapManager mapManager;
 
+    public AttackerType attackerType;
+
     private enum CurrentState { Idle, Attacking, Moving, Dead };
     private CurrentState state = CurrentState.Idle;
     private Vector3Int lastPosition;
