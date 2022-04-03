@@ -300,6 +300,7 @@ GameObject:
   - component: {fileID: 65379239}
   - component: {fileID: 65379242}
   - component: {fileID: 65379243}
+  - component: {fileID: 65379244}
   m_Layer: 0
   m_Name: ExtraProps_132 (1)
   m_TagString: Untagged
@@ -413,6 +414,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   faction: 0
+--- !u!114 &65379244
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 65379238}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 619cfaece14a0fc4593dba881a67f244, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  attackerType: 3
 --- !u!1 &65916469
 GameObject:
   m_ObjectHideFlags: 0
@@ -1288,16 +1302,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemyList:
-  - gameObject: {fileID: 8174229828798647877, guid: 7dbcf337ea235604fb59250fb3863761, type: 3}
-    spawnPoint: {x: 6, y: 1, z: 0}
-    path:
-    - {x: 6, y: 2, z: 0}
-    - {x: 6, y: 3, z: 0}
-    - {x: 6, y: 4, z: 0}
-    - {x: 5, y: 4, z: 0}
-  - gameObject: {fileID: 8174229828798647877, guid: 7dbcf337ea235604fb59250fb3863761, type: 3}
-    spawnPoint: {x: 6, y: 1, z: 0}
-    path: []
+  - {fileID: 8174229828798647877, guid: 7dbcf337ea235604fb59250fb3863761, type: 3}
+  SpawnGridXMin: 0
+  SpawnGridXMax: 15
+  SpawnGridYMin: 0
+  SpawnGridYMax: 12
+  spawnIntervalInitial: 2
+  spawnIntervalDecreaseAfterEachSpawn: 0.05
 --- !u!4 &468528061
 Transform:
   m_ObjectHideFlags: 0
