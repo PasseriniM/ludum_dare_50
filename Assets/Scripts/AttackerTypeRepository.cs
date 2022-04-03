@@ -4,6 +4,14 @@ using UnityEngine;
 
 public enum AttackerType { Rider, Infantry, Piker };
 
+[System.Serializable]
+public class AttackerEditorEntry
+{
+  public   AttackerType typeAttack;
+  public  AttackerType typeDefense;
+  public  float modifier;
+}
+
 public class AttackerTypeRepository : MonoBehaviour
 {
     public class AttackerMatch
@@ -25,15 +33,49 @@ public class AttackerTypeRepository : MonoBehaviour
         {
             return !(lhs.typeAttack == rhs.typeAttack && lhs.typeDefense == rhs.typeDefense);
         }
+
+        private static int GetAttackHash(AttackerType type)
+        {
+            switch (type)
+            {
+                case AttackerType.Infantry:
+                    return 13;
+                case AttackerType.Rider:
+                    return 17;
+                case AttackerType.Piker:
+                    return 19;
+                default:
+                    return 1;
+            }
+        }
+        private static int GetDefendHash(AttackerType type)
+        {
+            switch (type)
+            {
+                case AttackerType.Infantry:
+                    return 3;
+                case AttackerType.Rider:
+                    return 5;
+                case AttackerType.Piker:
+                    return 7;
+                default:
+                    return 1;
+            }
+        }
+
+
         public override int GetHashCode()
         {
-            return (int)typeAttack * (int)typeDefense;
+            return GetAttackHash(typeAttack) * GetDefendHash(typeDefense);
         }
         AttackerType typeAttack;
         AttackerType typeDefense;
     }
 
     private Dictionary<AttackerMatch, float> bonusModifiers;
+
+    [SerializeField]
+    public List<AttackerEditorEntry> modifierList;
 
     public float GetModifier(AttackerType attacker, AttackerType defender)
     {
@@ -44,5 +86,14 @@ public class AttackerTypeRepository : MonoBehaviour
             return modifier;
         }
         return 1f;
+    }
+
+    private void Awake()
+    {
+        foreach(AttackerEditorEntry entry in modifierList)
+        {
+            AttackerMatch match = new AttackerMatch(entry.typeAttack, entry.typeDefense);
+            bonusModifiers.Add(match, entry.modifier);
+        }
     }
 }

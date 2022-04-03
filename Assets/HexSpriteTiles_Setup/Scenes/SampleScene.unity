@@ -1499,19 +1499,7 @@ MonoBehaviour:
     m_ActionId: ba91d27a-cca1-490c-b45f-36f4462c1778
     m_ActionName: UI/Point[/Mouse/position]
   - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: 
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
     m_ActionId: ab8ba22c-bc6f-4dd2-a79c-75180d86cbc8
     m_ActionName: UI/Click[/Mouse/leftButton]
   - m_PersistentCalls:
@@ -6224,7 +6212,6 @@ GameObject:
   - component: {fileID: 1851915186}
   - component: {fileID: 1851915185}
   - component: {fileID: 1851915187}
-  - component: {fileID: 1851915188}
   m_Layer: 0
   m_Name: BaseTiles
   m_TagString: Untagged
@@ -8997,104 +8984,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   map: {fileID: 1851915186}
-  mainCamera: {fileID: 534669904}
   tileDatas:
   - {fileID: 11400000, guid: 485d90d81d7364245bd645f09d3396b9, type: 2}
   - {fileID: 11400000, guid: d66dc29b941a06d43ba25efd3f198179, type: 2}
---- !u!114 &1851915188
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1851915183}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Actions: {fileID: -944628639613478452, guid: c1517ece06d913d49b491cbbd463955c, type: 3}
-  m_NotificationBehavior: 2
-  m_UIInputModule: {fileID: 0}
-  m_DeviceLostEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_DeviceRegainedEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_ControlsChangedEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_ActionEvents:
-  - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: 656be170-4f80-4c55-b17d-bb5d52b3be24
-    m_ActionName: UI/Navigate
-  - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: 45269bf8-7c71-4bd0-b912-bba8d769a39b
-    m_ActionName: UI/Submit
-  - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: 98dc44dc-2cc2-4a30-b4aa-ae185562e8ff
-    m_ActionName: UI/Cancel
-  - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1851915187}
-        m_TargetAssemblyTypeName: MapManager, Assembly-CSharp
-        m_MethodName: OnPoint
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_ActionId: ba91d27a-cca1-490c-b45f-36f4462c1778
-    m_ActionName: UI/Point[/Mouse/position]
-  - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1851915187}
-        m_TargetAssemblyTypeName: MapManager, Assembly-CSharp
-        m_MethodName: OnClick
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_ActionId: ab8ba22c-bc6f-4dd2-a79c-75180d86cbc8
-    m_ActionName: UI/Click[/Mouse/leftButton]
-  - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: 9451f5df-a922-45b4-9e8b-a005c91658aa
-    m_ActionName: UI/ScrollWheel[/Mouse/scroll]
-  - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: c688014c-49e0-4082-bbca-4668f8d2cd73
-    m_ActionName: UI/MiddleClick[/Mouse/middleButton]
-  - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: b926361d-91df-44a0-a617-ac4713238848
-    m_ActionName: UI/RightClick[/Mouse/rightButton]
-  - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: c5f049b7-5315-4717-b5e2-3b1fbcd04f40
-    m_ActionName: UI/TrackedDevicePosition
-  - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: 6721b437-0301-455b-bccf-71329bef826c
-    m_ActionName: UI/TrackedDeviceOrientation
-  m_NeverAutoSwitchControlSchemes: 0
-  m_DefaultControlScheme: 
-  m_DefaultActionMap: UI
-  m_SplitScreenIndex: -1
-  m_Camera: {fileID: 0}
 --- !u!1 &1898386378
 GameObject:
   m_ObjectHideFlags: 0
@@ -9288,6 +9180,34 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 690ce6593fa61124f9e0932a624fbaf7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  modifierList:
+  - typeAttack: 0
+    typeDefense: 0
+    modifier: 1
+  - typeAttack: 0
+    typeDefense: 1
+    modifier: 2
+  - typeAttack: 0
+    typeDefense: 2
+    modifier: 0.7
+  - typeAttack: 1
+    typeDefense: 0
+    modifier: 0.7
+  - typeAttack: 1
+    typeDefense: 1
+    modifier: 1
+  - typeAttack: 1
+    typeDefense: 2
+    modifier: 2
+  - typeAttack: 2
+    typeDefense: 2
+    modifier: 1
+  - typeAttack: 2
+    typeDefense: 0
+    modifier: 2
+  - typeAttack: 2
+    typeDefense: 1
+    modifier: 0.7
 --- !u!4 &1904175779
 Transform:
   m_ObjectHideFlags: 0

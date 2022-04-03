@@ -156,9 +156,6 @@ public class MapManager : MonoBehaviour
     public Tilemap map;
 
     [SerializeField]
-    private Camera mainCamera;
-
-    [SerializeField]
     private List<TileData> tileDatas;
 
     private Dictionary<TileBase, TileData> dataFromTiles;
@@ -203,20 +200,5 @@ public class MapManager : MonoBehaviour
         }
 
         return poisonModifier;
-    }
-
-    public void OnPoint(InputAction.CallbackContext context)
-    {
-        mousePosition = context.ReadValue<Vector2>();
-        mouseWorldPosition = mainCamera.ScreenToWorldPoint(mousePosition);
-    }
-
-    public void OnClick(InputAction.CallbackContext context)
-    {
-        Vector3Int gridPosition = map.WorldToCell(mouseWorldPosition);
-
-        TileBase clickedTile = map.GetTile(gridPosition);
-
-        print("Position " + gridPosition + " there is a " + clickedTile);
     }
 }

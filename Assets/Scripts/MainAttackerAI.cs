@@ -146,6 +146,7 @@ public class MainAttackerAI : MonoBehaviour
     private void DeadUpdate()
     {
         //nothing. Play animation? Destroy?
+        Destroy(gameObject);
     }
 
     // Start is called before the first frame update
