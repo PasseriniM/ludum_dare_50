@@ -93,7 +93,7 @@ GameObject:
   - component: {fileID: 4649366878640322666}
   - component: {fileID: 4649366878640322667}
   - component: {fileID: 4649366878640322665}
-  - component: {fileID: 4649366878640322664}
+  - component: {fileID: 5410500271140229433}
   m_Layer: 0
   m_Name: HQ
   m_TagString: Untagged
@@ -150,7 +150,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   health: 100
---- !u!114 &4649366878640322664
+--- !u!114 &5410500271140229433
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -159,10 +159,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 4649366878640322660}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 39430585fdb8a4849853a8b6ba69d087, type: 3}
+  m_Script: {fileID: 11500000, guid: 36943d73fbcf4894d8745abcd7a12996, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  timeBetweenCells: 0
   faction: 0
 --- !u!1001 &4649366877388252504
 PrefabInstance:
