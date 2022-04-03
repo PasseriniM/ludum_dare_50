@@ -26,7 +26,7 @@ public class HealthScript : MonoBehaviour
     public void ApplyDamage(float damage)
     {
         health -= damage;
-        Mathf.Clamp(health, -1f, startHealth);
+        health = Mathf.Clamp(health, -1f, startHealth);
     }
     public bool IsDead() { return health <= 0f; }
     public void Reset() { health = startHealth; }

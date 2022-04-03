@@ -6,24 +6,35 @@ public class PathAndPositionManager
 {
     public MapManager mapManager;
 
-    public void Start()
+    public void Start(List<Vector3Int> newPath)
     {
+        bool oldArrived = false;
+        Vector3Int oldTarget = currentPosition;
+        Vector3Int oldPrevious = currentPosition;
+        if (cellList!=null && cellList.Count > 0)
+        {
+            oldArrived = HasArrived();
+            oldTarget = GetCurrentTargetCell();
+            oldPrevious = GetPreviousTargetCell();
+        }
+        startPosition = currentPosition;
+        currentIndex = 0;
+        cellList = newPath;
         if (cellList.Count > 0)
         {
-            bool oldArrived = HasArrived();
-            Vector3Int oldTarget = GetCurrentTargetCell();
-            startPosition = currentPosition;
-            currentIndex = 0;
-
             if (!oldArrived && oldTarget != GetCurrentTargetCell())
             {
                 //we need to change direction
-                if(currentPosition!=GetCurrentTargetCell())
+                if (currentPosition != GetCurrentTargetCell())
                 {
                     cellList.Insert(0, currentPosition);
+                    cellList.Insert(0, oldTarget);
+                    currentIndex = 1;
                 }
             }
 
+            cellList.Insert(0, oldPrevious);
+            currentIndex = 1;
             UpdateFacingDirection();
         }
     }
@@ -81,7 +92,7 @@ public class PathAndPositionManager
     private void UpdateFacingDirection() 
     {
         Vector3Int newFacing =  GetCurrentTargetCell() - currentPosition;
-        if(mapManager.logicGrid.IsValidDirection(newFacing))
+        if(LogicGrid.IsValidDirection(currentPosition,newFacing))
         {
             facingDirection = newFacing;
         }
@@ -109,8 +120,7 @@ public class MovingCharacterScript : MonoBehaviour
 
     public PathAndPositionManager pathManager = new PathAndPositionManager();
     private List<Vector3Int> lastPath;
-
-    float amountToMoveTowardsTarget = 0f;
+    private float amountToMove = 0f;
 
     void Awake()
     {
@@ -125,8 +135,8 @@ public class MovingCharacterScript : MonoBehaviour
 
     public void StartPath(List<Vector3Int> newPath)
     {
-        pathManager.cellList = newPath;
-        pathManager.Start();
+        pathManager.Start(newPath);
+        amountToMove = Mathf.Clamp(InverseLerp(pathManager.GetPreviousTarget(), pathManager.GetCurrentTarget(), pathManager.currentWorldPosition), 0f, 1f);
     }
 
     public void MemorizeBackupPath()
@@ -171,13 +181,27 @@ public class MovingCharacterScript : MonoBehaviour
         pathManager.UpdateCurrentPosition(transform.position);
         if (pathManager.TryAdvancePath())
         {
-            amountToMoveTowardsTarget = 0f;
+            amountToMove = 0f;
             if (pathManager.HasArrived())
             {
                 print("I have arrived");
                 return;
             }
         }
+    }
+    public static float InverseLerp(Vector3 a, Vector3 b, Vector3 value)
+    {
+        if(a==b || value==b)
+        {
+            return 1f;
+        }
+        if(value == a)
+        {
+            return 0f;
+        }
+        Vector3 AB = b - a;
+        Vector3 AV = value - a;
+        return Vector3.Dot(AV, AB) / Vector3.Dot(AB, AB);
     }
 
     // Update is called once per frame
@@ -186,9 +210,8 @@ public class MovingCharacterScript : MonoBehaviour
         //Get current speed expressed in grid cells per second
         float baseSpeed = 1f / timeBetweenCells;
         float currentSpeed = baseSpeed * mapManager.GetSpeedModifier(pathManager.currentPosition);
-        amountToMoveTowardsTarget += currentSpeed * Time.deltaTime;
-        Mathf.Clamp(amountToMoveTowardsTarget, 0f, 1f);
-
-        transform.position = Vector3.Lerp(pathManager.GetPreviousTarget(), pathManager.GetCurrentTarget(), amountToMoveTowardsTarget);
+        float amountToMoveTowardsTarget = currentSpeed * Time.deltaTime;
+        amountToMove += amountToMoveTowardsTarget;
+        transform.position = Vector3.Lerp(pathManager.GetPreviousTarget(), pathManager.GetCurrentTarget(), amountToMove);
     }
 }

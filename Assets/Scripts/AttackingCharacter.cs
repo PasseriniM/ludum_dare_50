@@ -49,7 +49,6 @@ public class AttackingCharacter : MonoBehaviour
                 }
             }
         }
-
         MovingCharacterScript script = result.GetComponent<MovingCharacterScript>();
         if(script.faction == movingCharacter.faction)
         {
@@ -83,6 +82,13 @@ public class AttackingCharacter : MonoBehaviour
     {
         if (currentTarget != null)
         {
+            MovingCharacterScript targetMovingScript = currentTarget.GetComponent<MovingCharacterScript>();
+            Vector3Int dir = targetMovingScript.pathManager.currentPosition - movingCharacter.pathManager.currentPosition;
+            if(!LogicGrid.IsValidDirection(movingCharacter.pathManager.currentPosition,dir))
+            {
+                currentTarget = null;
+                return;
+            }
             HealthScript targetHealthScript = currentTarget.GetComponent<HealthScript>();
             AttackerType targetAttackerType = currentTarget.GetComponent<AttackTypeEntityScript>().attackerType;
             float modifier = attackTypeRepository.GetModifier(attackTypeScript.attackerType, targetAttackerType);

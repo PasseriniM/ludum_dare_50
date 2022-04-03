@@ -8,78 +8,150 @@ public class LogicGrid
 {
     private Dictionary<Vector3Int, List<GameObject>> characterPerCell = new Dictionary<Vector3Int, List<GameObject>>();
 
-    public bool IsValidDirection(Vector3Int direction)
+    private Vector3Int left = new Vector3Int(-1,0,0);
+    private Vector3Int right = new Vector3Int(1, 0, 0);
+
+    private Vector3Int upLeftEven = new Vector3Int(-1, 1, 0);
+    private Vector3Int upRightEven = new Vector3Int(0, 1, 0);
+    private Vector3Int downLeftEven = new Vector3Int(-1, -1, 0);
+    private Vector3Int downRightEven = new Vector3Int(0, -1, 0);
+
+    private Vector3Int upLeftOdd = new Vector3Int(0, 1, 0);
+    private Vector3Int upRightOdd = new Vector3Int(1, 1, 0);
+    private Vector3Int downLeftOdd = new Vector3Int(0, -1, 0);
+    private Vector3Int downRightOdd = new Vector3Int(1, -1, 0);
+
+    public static bool IsValidDirection(Vector3Int position, Vector3Int direction)
     {
-        return !((direction.x == 0 && direction.y == 0) ||
-            (direction.x == 0 && direction.y == 1) ||
-            (direction.x == 1 && direction.y == -1) ||
-            (direction.x == 1 && direction.y == -1));
+        if(position.y % 2 == 0)
+        {
+            return !((direction.x == 0 && direction.y == 0) ||
+                (direction.x > 0 && direction.y != 0));
+        }
+        else
+        {
+            return !((direction.x == 0 && direction.y == 0) ||
+               (direction.x < 0  && direction.y != 0));
+        }
     }
 
-    public void FillAdjacencyList(Vector3Int startDirection, out List<Vector3Int> adjacencyList)
+    public void FillAdjacencyList(Vector3Int curPosition,Vector3Int startDirection, out List<Vector3Int> adjacencyList)
     {
-        if (!IsValidDirection(startDirection))
+        if (!IsValidDirection(curPosition,startDirection))
         {
             adjacencyList = null;
             return;
         }
 
-        startDirection.z = startDirection.z != 0 ? 0 : startDirection.z;
+        startDirection.z = 0;
 
-        Mathf.Clamp(startDirection.x, -1, 1);
-        Mathf.Clamp(startDirection.y, -1, 1);
+        startDirection.x= Mathf.Clamp(startDirection.x, -1, 1);
+        startDirection.y= Mathf.Clamp(startDirection.y, -1, 1);
 
         adjacencyList = new List<Vector3Int>();
         adjacencyList.Add(startDirection);
-        if (startDirection.x == 1 && startDirection.y == 1)
+        if (curPosition.y % 2 != 0)
         {
-            adjacencyList.Add(new Vector3Int(-1, 1, 0));
-            adjacencyList.Add(new Vector3Int(1, 0, 0));
-            adjacencyList.Add(new Vector3Int(-1, 0, 0));
-            adjacencyList.Add(new Vector3Int(0, -1, 0));
-            adjacencyList.Add(new Vector3Int(-1, -1, 0));
+            if (startDirection == upRightOdd)
+            {
+                adjacencyList.Add(upLeftOdd);
+                adjacencyList.Add(right);
+                adjacencyList.Add(left);
+                adjacencyList.Add(downRightOdd);
+                adjacencyList.Add(downLeftOdd);
+            }
+            else if (startDirection == right)
+            {
+                adjacencyList.Add(upRightOdd);
+                adjacencyList.Add(downRightOdd);
+                adjacencyList.Add(upLeftOdd);
+                adjacencyList.Add(downLeftOdd);
+                adjacencyList.Add(left);
+            }
+            else if (startDirection == downRightOdd)
+            {
+                adjacencyList.Add(right);
+                adjacencyList.Add(downLeftOdd);
+                adjacencyList.Add(upRightOdd);
+                adjacencyList.Add(left);
+                adjacencyList.Add(upLeftOdd);
+            }
+            else if (startDirection == downLeftOdd)
+            {
+                adjacencyList.Add(downRightOdd);
+                adjacencyList.Add(left);
+                adjacencyList.Add(right);
+                adjacencyList.Add(upLeftOdd);
+                adjacencyList.Add(upRightOdd);
+            }
+            else if (startDirection == left)
+            {
+                adjacencyList.Add(downLeftOdd);
+                adjacencyList.Add(upLeftOdd);
+                adjacencyList.Add(downRightOdd);
+                adjacencyList.Add(upRightOdd);
+                adjacencyList.Add(right);
+            }
+            else if (startDirection == upLeftOdd)
+            {
+                adjacencyList.Add(left);
+                adjacencyList.Add(upRightOdd);
+                adjacencyList.Add(downLeftOdd);
+                adjacencyList.Add(right);
+                adjacencyList.Add(downRightOdd);
+            }
         }
-        else if( startDirection.x == 1 && startDirection.y == 0)
+        else
         {
-            adjacencyList.Add(new Vector3Int(1, 1, 0));
-            adjacencyList.Add(new Vector3Int(0, -1, 0));
-            adjacencyList.Add(new Vector3Int(-1, 1, 0));
-            adjacencyList.Add(new Vector3Int(-1, -1, 0));
-            adjacencyList.Add(new Vector3Int(-1, 0, 0));
+            if (startDirection == upRightEven)
+            {
+                adjacencyList.Add(upLeftEven);
+                adjacencyList.Add(right);
+                adjacencyList.Add(left);
+                adjacencyList.Add(downRightEven);
+                adjacencyList.Add(downLeftEven);
+            }
+            else if (startDirection == right)
+            {
+                adjacencyList.Add(upRightEven);
+                adjacencyList.Add(downRightEven);
+                adjacencyList.Add(upLeftEven);
+                adjacencyList.Add(downLeftEven);
+                adjacencyList.Add(left);
+            }
+            else if (startDirection == downRightEven)
+            {
+                adjacencyList.Add(right);
+                adjacencyList.Add(downLeftEven);
+                adjacencyList.Add(upRightEven);
+                adjacencyList.Add(left);
+                adjacencyList.Add(upLeftEven);
+            }
+            else if (startDirection == downLeftEven)
+            {
+                adjacencyList.Add(downRightEven);
+                adjacencyList.Add(left);
+                adjacencyList.Add(right);
+                adjacencyList.Add(upLeftEven);
+                adjacencyList.Add(upRightEven);
+            }
+            else if (startDirection == left)
+            {
+                adjacencyList.Add(downLeftEven);
+                adjacencyList.Add(upLeftEven);
+                adjacencyList.Add(downRightEven);
+                adjacencyList.Add(upRightEven);
+                adjacencyList.Add(right);
+            }
+            else if (startDirection == upLeftEven)
+            {
+                adjacencyList.Add(left);
+                adjacencyList.Add(upRightEven);
+                adjacencyList.Add(downLeftEven);
+                adjacencyList.Add(right);
+                adjacencyList.Add(downRightEven);
+            }
         }
-        else if (startDirection.x == 0 && startDirection.y == -1)
-        {
-            adjacencyList.Add(new Vector3Int(1, 0, 0));
-            adjacencyList.Add(new Vector3Int(-1, -1, 0));
-            adjacencyList.Add(new Vector3Int(1, 1, 0));
-            adjacencyList.Add(new Vector3Int(-1, 0, 0));
-            adjacencyList.Add(new Vector3Int(-1, 1, 0));
-        }
-        else if (startDirection.x == -1 && startDirection.y == -1)
-        {
-            adjacencyList.Add(new Vector3Int(0, -1, 0));
-            adjacencyList.Add(new Vector3Int(-1, 0, 0));
-            adjacencyList.Add(new Vector3Int(1, 0, 0));
-            adjacencyList.Add(new Vector3Int(-1, 1, 0));
-            adjacencyList.Add(new Vector3Int(1, 1, 0));
-        }
-        else if (startDirection.x == -1 && startDirection.y == 0)
-        {
-            adjacencyList.Add(new Vector3Int(-1, -1, 0));
-            adjacencyList.Add(new Vector3Int(-1, 1, 0));
-            adjacencyList.Add(new Vector3Int(0, -1, 0));
-            adjacencyList.Add(new Vector3Int(1, 1, 0));
-            adjacencyList.Add(new Vector3Int(1, 0, 0));
-        }
-        else if (startDirection.x == -1 && startDirection.y == 1)
-        {
-            adjacencyList.Add(new Vector3Int(-1, 0, 0));
-            adjacencyList.Add(new Vector3Int(1, 1, 0));
-            adjacencyList.Add(new Vector3Int(-1, -1, 0));
-            adjacencyList.Add(new Vector3Int(1, 0, 0));
-            adjacencyList.Add(new Vector3Int(0, -1, 0));
-        }
-
     }
     public void Subscribe(Vector3Int position, GameObject gameObject)
     {
@@ -120,15 +192,18 @@ public class LogicGrid
         characters = new List<GameObject>();
         priorityDirection = startDirection;
         List<Vector3Int> adjacencyRules;
-        FillAdjacencyList(startDirection, out adjacencyRules);
+        FillAdjacencyList(position,startDirection, out adjacencyRules);
         foreach(Vector3Int dir in adjacencyRules)
         {
             List<GameObject> partialCharacters;
-            if (characterPerCell.TryGetValue(position, out partialCharacters))
+            if (characterPerCell.TryGetValue(position+dir, out partialCharacters))
             {
-                priorityDirection = dir;
-                characters.AddRange(partialCharacters);
-                return;
+                if(partialCharacters.Count>0)
+                {
+                    priorityDirection = dir;
+                    characters.AddRange(partialCharacters);
+                    return;
+                }
             }
         }
     }
@@ -137,13 +212,16 @@ public class LogicGrid
     {
         characters = new List<GameObject>();
         List<Vector3Int> adjacencyRules;
-        FillAdjacencyList(startDirection, out adjacencyRules);
+        FillAdjacencyList(position, startDirection, out adjacencyRules);
         foreach (Vector3Int dir in adjacencyRules)
         {
             List<GameObject> partialCharacters;
-            if (characterPerCell.TryGetValue(position, out partialCharacters))
+            if (characterPerCell.TryGetValue(position+dir, out partialCharacters))
             {
-                characters.AddRange(partialCharacters);
+                if (partialCharacters.Count > 0)
+                {
+                    characters.AddRange(partialCharacters);
+                }
             }
         }
     }
@@ -198,7 +276,6 @@ public class MapManager : MonoBehaviour
         {
             poisonModifier = dataFromTiles[tile].poisonModifier;
         }
-
         return poisonModifier;
     }
 }

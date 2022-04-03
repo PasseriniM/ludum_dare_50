@@ -32,7 +32,7 @@ public class EnemyManager : MonoBehaviour
             position.z = 0f;
             GameObject enemyInstance = Instantiate(enemy.gameObject, position, Quaternion.identity,transform);
             MovingCharacterScript movingScript = enemyInstance.GetComponent<MovingCharacterScript>();
-            movingScript.pathManager.currentPosition = enemy.spawnPoint;
+            movingScript.pathManager.UpdateCurrentPosition(position);
             movingScript.StartPath(enemy.path);
             movingScript.MemorizeBackupPath();
             spawnedEnemies.Add(enemyInstance);
@@ -47,7 +47,10 @@ public class EnemyManager : MonoBehaviour
             if(spawnedEnemy !=null)
             {
                 MovingCharacterScript movingScript = spawnedEnemy.GetComponent<MovingCharacterScript>();
-                if(!movingScript.pathManager.IsMoving() && !movingScript.HasReachedBackupPathDestination())
+                AttackingCharacter attackingCharacter = spawnedEnemy.GetComponent<AttackingCharacter>();
+                if (!attackingCharacter.IsAttacking() && 
+                    !movingScript.pathManager.IsMoving() && 
+                    !movingScript.HasReachedBackupPathDestination())
                 {
                     movingScript.ResumeOldPath();
                 }

@@ -29,7 +29,8 @@ public class AllySpawner : MonoBehaviour
             position.z = 0f;
             GameObject allyInstance = Instantiate(ally.gameObject, position, Quaternion.identity, transform);
             MovingCharacterScript movingScript = allyInstance.GetComponent<MovingCharacterScript>();
-            movingScript.pathManager.currentPosition = ally.spawnPoint;
+            movingScript.pathManager.startPosition = ally.spawnPoint;
+            movingScript.pathManager.UpdateCurrentPosition(position);
         }
     }
 

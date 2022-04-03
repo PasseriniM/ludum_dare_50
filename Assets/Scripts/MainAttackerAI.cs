@@ -109,7 +109,13 @@ public class MainAttackerAI : MonoBehaviour
     }
     private void AttackingUpdate()
     {
-        if(!attackScript.IsAttacking())
+        if (lastPosition != movingScript.pathManager.currentPosition)
+        {
+            mapManager.logicGrid.Unsubscribe(lastPosition, gameObject);
+            lastPosition = movingScript.pathManager.currentPosition;
+            mapManager.logicGrid.Subscribe(lastPosition, gameObject);
+        }
+        if (!attackScript.IsAttacking())
         {
             state = CurrentState.Idle;
         }
@@ -148,6 +154,7 @@ public class MainAttackerAI : MonoBehaviour
     private void DeadUpdate()
     {
         //nothing. Play animation? Destroy?
+        mapManager.logicGrid.Unsubscribe(lastPosition, gameObject);
         Destroy(gameObject);
     }
 
