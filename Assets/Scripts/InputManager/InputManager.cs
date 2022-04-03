@@ -4,6 +4,14 @@ using UnityEngine;
 using UnityEngine.Tilemaps;
 using UnityEngine.InputSystem;
 
+enum MessageDefinition
+{
+	DISABLED,
+	MESSAGE_PATH,
+	COMMAND_START,
+	COMMAND_PATH
+}
+
 public class InputManager : MonoBehaviour
 {
 	[SerializeField]
@@ -14,24 +22,51 @@ public class InputManager : MonoBehaviour
 	private Tilemap highlight;
 	[SerializeField]
 	private TileBase messageTile;
+	[SerializeField]
+	private TileBase commandTile;
+	[SerializeField]
+	private List<MessengerAI> availableMessengers;
+	private List<MessengerAI> busyMessengers = new List<MessengerAI>();
 
-	private bool drawingMessage;
+	private MessageDefinition msg = MessageDefinition.DISABLED;
 
 	private List<Vector3Int> messageRoute = new List<Vector3Int>();
+	private Dictionary<Vector3Int, List<Vector3Int>> commands = new Dictionary<Vector3Int, List<Vector3Int>>();
 	private Vector3Int previousCell;
-
-	private Color messageHighlight = Color.red;
+	private Vector3Int currentCommand;
 
 	private void Update()
 	{
-		if (drawingMessage)
+		switch (msg)
 		{
-			var cell = CellClicked();
+			case (MessageDefinition.MESSAGE_PATH):
+				{
+					var cell = CellClicked();
 
-			if (CheckValidity(cell))
-			{
-				AddToRoute(cell);
-			}
+					if (CheckValidity(cell))
+					{
+						AddToMessage(cell);
+					}
+					break;
+				}
+			case (MessageDefinition.COMMAND_START):
+				{
+					break;
+				}
+			case (MessageDefinition.COMMAND_PATH):
+				{
+					var cell = CellClicked();
+
+					if (CheckValidity(currentCommand, cell))
+					{
+						AddToCommand(currentCommand, cell);
+					}
+					break;
+				}
+			default:
+				{
+					break;
+				}
 		}
 	}
 
@@ -42,50 +77,104 @@ public class InputManager : MonoBehaviour
 		return cell != lastCell && cell != previousCell && NeighboursOf(lastCell).Contains(cell);
 	}
 
+	private bool CheckValidity(Vector3Int key, Vector3Int cell)
+	{
+		var comm = commands[key];
+		var lastCell = comm[comm.Count - 1];
+
+
+
+		return cell != lastCell && cell != previousCell && !hq.cellsOccupied.Contains(cell) && NeighboursOf(lastCell).Contains(cell);
+	}
+
 	public void ClickTest(InputAction.CallbackContext context)
 	{
 
-		if (context.performed)
+		switch (msg)
 		{
-			var cell = CellClicked();
-
-			Debug.Log("Mouse clicked " + cell);
-
-			if (hq.cellsOccupied.Contains(cell))
-			{
-				messageRoute.Add(cell);
-				//highlight.SetTile(cell, messageTile);
-				drawingMessage = true;
-			}
-
-		}
-		else if (context.canceled)
-		{
-			if (drawingMessage)
-			{
-
-				drawingMessage = false;
-
-				if (hq.cellsOccupied.Contains(messageRoute[messageRoute.Count - 1]))
+			case (MessageDefinition.MESSAGE_PATH):
 				{
-					Debug.Log("Valid Route");
+					if (context.canceled)
+					{
+						if (hq.cellsOccupied.Contains(messageRoute[messageRoute.Count - 1]))
+						{
+							Debug.Log("Valid Route");
+							msg = MessageDefinition.COMMAND_START;
+						}
+						else
+						{
+
+							Reset();
+							Debug.Log("Invalid Route");
+						}
+					}
+
+					break;
 				}
-				else
+			case (MessageDefinition.COMMAND_START):
 				{
-					messageRoute.Clear();
-					highlight.ClearAllTiles();
-					Debug.Log("Invalid Route");
+					if (context.performed)
+					{
+						var cell = CellClicked();
+
+						if (messageRoute.Contains(cell))
+						{
+							commands.Add(cell, new List<Vector3Int>());
+							commands[cell].Add(cell);
+							previousCell = cell;
+							currentCommand = cell;
+							msg = MessageDefinition.COMMAND_PATH;
+						}
+					}
+
+					break;
 				}
-			}
+			case (MessageDefinition.COMMAND_PATH):
+				{
+					if (context.canceled)
+					{
+						msg = MessageDefinition.COMMAND_START;
+					}
+
+					break;
+				}
+			default:
+				{
+					if (context.performed)
+					{
+						var cell = CellClicked();
+
+						Debug.Log("Mouse clicked " + cell);
+
+						if (hq.cellsOccupied.Contains(cell))
+						{
+							messageRoute.Add(cell);
+							//highlight.SetTile(cell, messageTile);
+							msg = MessageDefinition.MESSAGE_PATH;
+						}
+
+					}
+
+					break;
+				}
 		}
 	}
 
-	private void AddToRoute(Vector3Int cell)
+	private void AddToMessage(Vector3Int cell)
 	{
 		previousCell = messageRoute[messageRoute.Count - 1];
 		messageRoute.Add(cell);
 		highlight.SetTile(cell, messageTile);
-		Debug.Log("Route Length: " + messageRoute.Count);
+		//Debug.Log("Route Length: " + messageRoute.Count);
+	}
+
+	private void AddToCommand(Vector3Int key, Vector3Int cell)
+	{
+		var comm = commands[key];
+		previousCell = comm[comm.Count - 1];
+		comm.Add(cell);
+		highlight.SetTile(cell, commandTile);
+		//Debug.Log("Route Length: " + messageRoute.Count);
 	}
 
 	private Vector3Int CellClicked()
@@ -119,5 +208,33 @@ public class InputManager : MonoBehaviour
 		}
 
 		return res;
+	}
+
+	private void Reset()
+	{
+		msg = MessageDefinition.DISABLED;
+		messageRoute.Clear();
+		commands.Clear();
+		highlight.ClearAllTiles();
+	}
+
+	public void ConfirmMessage()
+	{
+		if (msg == MessageDefinition.COMMAND_START)
+		{
+
+			var m = availableMessengers[0];
+
+			availableMessengers.RemoveAt(0);
+			busyMessengers.Add(m);
+
+			foreach (var comm in commands)
+			{
+				m.AddMessage(comm.Key, comm.Value);
+			}
+
+			m.StartPath(messageRoute);
+			Reset();
+		}
 	}
 }
