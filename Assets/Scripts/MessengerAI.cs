@@ -134,5 +134,6 @@ public class MessengerAI : MonoBehaviour
     private void DeadUpdate()
     {
         //nothing. Play animation? Destroy?
+        Destroy(gameObject);
     }
 }

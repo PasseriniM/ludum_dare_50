@@ -10,8 +10,20 @@ public class PathAndPositionManager
     {
         if (cellList.Count > 0)
         {
+            bool oldArrived = HasArrived();
+            Vector3Int oldTarget = GetCurrentTargetCell();
             startPosition = currentPosition;
             currentIndex = 0;
+
+            if (!oldArrived && oldTarget != GetCurrentTargetCell())
+            {
+                //we need to change direction
+                if(currentPosition!=GetCurrentTargetCell())
+                {
+                    cellList.Insert(0, currentPosition);
+                }
+            }
+
             UpdateFacingDirection();
         }
     }
@@ -88,8 +100,8 @@ public class MovingCharacterScript : MonoBehaviour
 {
     private MapManager mapManager;
 
-    //base speed in grid cells per second
-    public float baseSpeed;
+    //seconds necessary to move from one cell to the next
+    public float timeBetweenCells;
     public enum FactionType { Hero, Enemy };
     public FactionType faction;
 
@@ -138,6 +150,7 @@ public class MovingCharacterScript : MonoBehaviour
     void Update()
     {
         //Get current speed expressed in grid cells per second
+        float baseSpeed = 1f / timeBetweenCells;
         float currentSpeed = baseSpeed * mapManager.GetSpeedModifier(pathManager.currentPosition);
         amountToMoveTowardsTarget += currentSpeed * Time.deltaTime;
         Mathf.Clamp(amountToMoveTowardsTarget, 0f, 1f);
