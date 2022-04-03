@@ -27,6 +27,7 @@ public class MessengerAI : MonoBehaviour
     {
         lastPosition = mapManager.map.WorldToCell(transform.position);
         mapManager.logicGrid.Subscribe(lastPosition, gameObject);
+        movingScript.pathManager.startPosition = lastPosition;
     }
 
     public void AddMessage(Vector3Int position, List<Vector3Int> message)
