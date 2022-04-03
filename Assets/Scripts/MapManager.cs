@@ -36,7 +36,7 @@ public class LogicGrid
     }
     public static bool IsValidAdjacent(Vector3Int position, Vector3Int direction)
     {
-        if(position.x>1 || position.x<-1 || position.y>1 ||position.y<-1)
+        if(direction.x>1 || direction.x<-1 || direction.y>1 || direction.y<-1)
         {
             return false;
         }
