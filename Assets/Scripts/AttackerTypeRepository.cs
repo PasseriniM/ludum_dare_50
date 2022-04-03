@@ -25,14 +25,15 @@ public class AttackerTypeRepository : MonoBehaviour
         {
             return !(lhs.typeAttack == rhs.typeAttack && lhs.typeDefense == rhs.typeDefense);
         }
-
+        public override int GetHashCode()
+        {
+            return (int)typeAttack * (int)typeDefense;
+        }
         AttackerType typeAttack;
         AttackerType typeDefense;
     }
 
     private Dictionary<AttackerMatch, float> bonusModifiers;
-
-    public
 
     public float GetModifier(AttackerType attacker, AttackerType defender)
     {
