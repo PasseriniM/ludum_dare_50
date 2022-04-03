@@ -55,14 +55,14 @@ public class PathAndPositionManager
     {
         Vector3 result= mapManager.map.CellToWorld(GetCurrentTargetCell());
         result.y += yOffset;
-        result.z = 0f;
+        result.z = zOffset;
         return result;
     }
     public Vector3 GetPreviousTarget()
     {
         Vector3 result = mapManager.map.CellToWorld(GetPreviousTargetCell());
         result.y += yOffset;
-        result.z = 0f;
+        result.z = zOffset;
         return result;
     }
     public bool IsMoving() { return currentIndex >= 0 && !HasArrived(); }
@@ -106,7 +106,8 @@ public class PathAndPositionManager
     public Vector3Int currentPosition = new Vector3Int(0, 0, 0);
     public Vector3Int facingDirection = new Vector3Int(1, 0, 0 );
 
-    private float yOffset = 0;
+    public float yOffset = 0f;
+    public float zOffset = 0f;
 }
 
 public class MovingCharacterScript : MonoBehaviour
@@ -128,6 +129,7 @@ public class MovingCharacterScript : MonoBehaviour
 
     private void Start()
     {
+        pathManager.zOffset = transform.position.z;
         pathManager.UpdateCurrentPosition(transform.position);
     }
 
