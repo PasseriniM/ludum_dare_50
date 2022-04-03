@@ -51,6 +51,7 @@ public class PathAndPositionManager
     {
         Vector3 result = mapManager.map.CellToWorld(GetPreviousTargetCell());
         result.y += yOffset;
+        result.z = 0f;
         return result;
     }
     public bool IsMoving() { return currentIndex >= 0 && !HasArrived(); }
