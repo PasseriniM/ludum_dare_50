@@ -9,7 +9,7 @@ public class MessengerAI : MonoBehaviour
     private HealthScript healthScript;
     private MapManager mapManager;
 
-    private Dictionary<Vector3Int, List<Vector3Int>> messages;
+    private Dictionary<Vector3Int, List<Vector3Int>> messages = new Dictionary<Vector3Int, List<Vector3Int>>();
 
     private enum CurrentState { Idle, Moving, Dead };
     private CurrentState state = CurrentState.Idle;

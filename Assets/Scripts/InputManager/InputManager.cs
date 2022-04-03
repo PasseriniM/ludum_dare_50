@@ -144,7 +144,7 @@ public class InputManager : MonoBehaviour
 					{
 						var cell = CellClicked();
 
-						Debug.Log("Mouse clicked " + cell);
+						//Debug.Log("Mouse clicked " + cell);
 
 						if (hq.cellsOccupied.Contains(cell))
 						{
@@ -220,6 +220,7 @@ public class InputManager : MonoBehaviour
 
 	public void ConfirmMessage()
 	{
+		Debug.Log("Message Confirmed");
 		if (msg == MessageDefinition.COMMAND_START)
 		{
 
@@ -234,6 +235,7 @@ public class InputManager : MonoBehaviour
 			}
 
 			m.StartPath(messageRoute);
+			Debug.Log("Messenger sent");
 			Reset();
 		}
 	}
