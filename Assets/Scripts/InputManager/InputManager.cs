@@ -218,6 +218,14 @@ public class InputManager : MonoBehaviour
 		highlight.ClearAllTiles();
 	}
 
+	private void Clean()
+	{
+		msg = MessageDefinition.DISABLED;
+		messageRoute = new List<Vector3Int>();
+		commands = new Dictionary<Vector3Int, List<Vector3Int>>();
+		highlight.ClearAllTiles();
+	}
+
 	public void ConfirmMessage()
 	{
 		Debug.Log("Message Confirmed");
@@ -236,7 +244,7 @@ public class InputManager : MonoBehaviour
 
 			m.StartPath(messageRoute);
 			Debug.Log("Messenger sent");
-			Reset();
+			Clean();
 		}
 	}
 }
