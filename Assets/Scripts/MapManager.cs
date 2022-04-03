@@ -34,6 +34,24 @@ public class LogicGrid
                (direction.x < 0  && direction.y != 0));
         }
     }
+    public static bool IsValidAdjacent(Vector3Int position, Vector3Int direction)
+    {
+        if(position.x>1 || position.x<-1 || position.y>1 ||position.y<-1)
+        {
+            return false;
+        }
+
+        if (position.y % 2 == 0)
+        {
+            return !((direction.x == 0 && direction.y == 0) ||
+                (direction.x == 1 && direction.y != 0));
+        }
+        else
+        {
+            return !((direction.x == 0 && direction.y == 0) ||
+               (direction.x == -1 && direction.y != 0));
+        }
+    }
 
     public void FillAdjacencyList(Vector3Int curPosition,Vector3Int startDirection, out List<Vector3Int> adjacencyList)
     {
