@@ -44,6 +44,7 @@ public class PathAndPositionManager
     {
         Vector3 result= mapManager.map.CellToWorld(GetCurrentTargetCell());
         result.y += yOffset;
+        result.z = 0f;
         return result;
     }
     public Vector3 GetPreviousTarget()
