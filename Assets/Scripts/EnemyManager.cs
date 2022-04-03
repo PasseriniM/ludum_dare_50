@@ -30,8 +30,9 @@ public class EnemyManager : MonoBehaviour
         {
             Vector3 position = mapManager.map.CellToWorld(enemy.spawnPoint);
             position.z = 0f;
-            GameObject enemyInstance = Instantiate(enemy.gameObject, position, Quaternion.identity);
+            GameObject enemyInstance = Instantiate(enemy.gameObject, position, Quaternion.identity,transform);
             MovingCharacterScript movingScript = enemyInstance.GetComponent<MovingCharacterScript>();
+            movingScript.pathManager.currentPosition = enemy.spawnPoint;
             movingScript.StartPath(enemy.path);
             movingScript.MemorizeBackupPath();
             spawnedEnemies.Add(enemyInstance);
