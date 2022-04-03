@@ -30,4 +30,9 @@ public class HealthScript : MonoBehaviour
     }
     public bool IsDead() { return health <= 0f; }
     public void Reset() { health = startHealth; }
+
+    public float HealthPercent()
+	{
+        return health / startHealth;
+	}
 }
