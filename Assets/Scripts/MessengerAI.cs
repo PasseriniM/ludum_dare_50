@@ -11,8 +11,8 @@ public class MessengerAI : MonoBehaviour
 
     private Dictionary<Vector3Int, List<Vector3Int>> messages = new Dictionary<Vector3Int, List<Vector3Int>>();
 
-    private enum CurrentState { Idle, Moving, Dead };
-    private CurrentState state = CurrentState.Idle;
+    public enum CurrentState { Idle, Moving, Dead };
+    public CurrentState state = CurrentState.Idle;
     private Vector3Int lastPosition;
 
     private void Awake()
