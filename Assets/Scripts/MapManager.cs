@@ -225,9 +225,10 @@ public class LogicGrid
         }
     }
 
-    public void GetAllSurroundingCharacters(Vector3Int position, Vector3Int startDirection, out List<GameObject> characters)
+    public void GetAllSurroundingCharacters(Vector3Int position, Vector3Int startDirection, out Vector3Int priorityDirection, out List<GameObject> characters)
     {
         characters = new List<GameObject>();
+        priorityDirection = startDirection;
         List<Vector3Int> adjacencyRules;
         FillAdjacencyList(position, startDirection, out adjacencyRules);
         foreach (Vector3Int dir in adjacencyRules)
@@ -237,6 +238,7 @@ public class LogicGrid
             {
                 if (partialCharacters.Count > 0)
                 {
+                    priorityDirection = dir;
                     characters.AddRange(partialCharacters);
                 }
             }

@@ -38,24 +38,36 @@ public class AttackingCharacter : MonoBehaviour
 
     private GameObject GetOpposingTarget(List<GameObject> priorityTargets)
     {
-        GameObject result = priorityTargets[0];
-        if (priorityTargets.Count > 1)
+        GameObject result = null;
+        bool foundMessenger = false;
+
+        //find and kill the hq or messenger/non attacking unit
+        foreach (GameObject possibleTarget in priorityTargets)
         {
-            //find and kill the messenger/non attacking unit
-            foreach (GameObject possibleTarget in priorityTargets)
+            FactionScript targetFactionscript = possibleTarget.GetComponent<FactionScript>();
+            if (factionScript.faction != targetFactionscript.faction)
             {
-                AttackingCharacter isAttacker = possibleTarget.GetComponent<AttackingCharacter>();
-                if (isAttacker == null)
+                HQCharacterAI isHQ = possibleTarget.GetComponent<HQCharacterAI>();
+                if (isHQ != null)
                 {
-                    result = possibleTarget;
+                    return possibleTarget;
+                }
+                else
+                {
+                    AttackingCharacter isAttacker = possibleTarget.GetComponent<AttackingCharacter>();
+                    if (isAttacker == null)
+                    {
+                        foundMessenger = true;
+                        result = possibleTarget;
+                    }
+                    else if(!foundMessenger)
+                    {
+                        result = possibleTarget;
+                    }
                 }
             }
         }
-        FactionScript script = result.GetComponent<FactionScript>();
-        if(factionScript.faction == script.faction)
-        {
-            return null;
-        }
+
         return result;
     }
 
@@ -63,8 +75,9 @@ public class AttackingCharacter : MonoBehaviour
     {
         List<GameObject> priorityTargets;
         Vector3Int newFacingDirection;
-        mapManager.logicGrid.GetPrioritySurroundingCharacters(movingCharacter.pathManager.currentPosition,
-            movingCharacter.pathManager.facingDirection, out newFacingDirection,
+        mapManager.logicGrid.GetAllSurroundingCharacters(movingCharacter.pathManager.currentPosition,
+            movingCharacter.pathManager.facingDirection,
+            out newFacingDirection,
             out priorityTargets);
 
         currentTarget = null;
