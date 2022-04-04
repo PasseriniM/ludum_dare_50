@@ -46,6 +46,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemyList:
   - {fileID: 8174229828798647877, guid: 7dbcf337ea235604fb59250fb3863761, type: 3}
+  - {fileID: 1407702094454625944, guid: fdf0ef78acacbf741b9055426ca00c25, type: 3}
+  - {fileID: 4062825888761523461, guid: 91f4d0a468a87d141b3281b2c3c51102, type: 3}
   SpawnGridXMin: -14
   SpawnGridXMax: 13
   SpawnGridYMin: -10

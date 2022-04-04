@@ -102,7 +102,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 39430585fdb8a4849853a8b6ba69d087, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  timeBetweenCells: 1
+  timeBetweenCells: 2
 --- !u!212 &5777366140312649186
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -293,12 +293,20 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4785623341580190, guid: 646797e349ba9a849b35f2a8b20fa3d4, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4785623341580190, guid: 646797e349ba9a849b35f2a8b20fa3d4, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4785623341580190, guid: 646797e349ba9a849b35f2a8b20fa3d4, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4785623341580190, guid: 646797e349ba9a849b35f2a8b20fa3d4, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.2
+      value: 1.241
       objectReference: {fileID: 0}
     - target: {fileID: 4785623341580190, guid: 646797e349ba9a849b35f2a8b20fa3d4, type: 3}
       propertyPath: m_LocalPosition.z
