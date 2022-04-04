@@ -148,11 +148,19 @@ public class InputManager : MonoBehaviour
 
 						if (messageRoute.Contains(cell))
 						{
+							if (commands.ContainsKey(cell))
+							{
+								ClearPath(commands[cell]);
+								commands.Remove(cell);
+							}
+
 							commands.Add(cell, new List<Vector3Int>());
 							commands[cell].Add(cell);
+							highlight.SetTile(cell, commandTile);
 							previousCell = cell;
 							currentCommand = cell;
 							state = MessageState.COMMAND_PATH;
+
 						}
 					}
 

@@ -38,7 +38,7 @@ public class MessengerButton : MonoBehaviour
 				}
 			case (MessageState.MESSAGE_PATH):
 				{
-					label.text = DISABLED_TEXT;
+					label.text = CANCEL_MESSAGE;
 					cancelButton.SetActive(false);
 					break;
 				}
