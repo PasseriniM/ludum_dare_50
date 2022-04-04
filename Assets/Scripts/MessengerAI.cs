@@ -165,4 +165,9 @@ public class MessengerAI : MonoBehaviour
 	{
         return movingScript.pathManager.HasArrived();
 	}
+
+    public Vector3Int CurrentPosition()
+	{
+        return movingScript.pathManager.currentPosition;
+	}
 }

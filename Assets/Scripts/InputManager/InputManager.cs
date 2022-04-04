@@ -42,6 +42,7 @@ public class InputManager : MonoBehaviour
 	private List<Vector3Int> messageRoute = new List<Vector3Int>();
 	private Dictionary<Vector3Int, List<Vector3Int>> commands = new Dictionary<Vector3Int, List<Vector3Int>>();
 	private Vector3Int previousCell;
+	private MessengerAI currentMessenger = null;
 	private Vector3Int currentCommand;
 
 	private void Update()
@@ -92,10 +93,63 @@ public class InputManager : MonoBehaviour
 		{
 			if (busyMessengers[i].HasArrived())
 			{
-				availableMessengers.Add(busyMessengers[i]);
-				busyMessengers.RemoveAt(i);
+				if (IsOccupied(busyMessengers[i].CurrentPosition()))
+				{
+					var free = HQFreeCells();
+					//Debug.Log(free.Count);
+					var rand = Random.Range(0, free.Count);
+					//Debug.Log(rand);
+					var newPos = free[rand];
+					//Debug.Log(newPos);
+					var path = new List<Vector3Int>
+					{
+						newPos
+					};
+					busyMessengers[i].StartPath(path);
+				}
+				else
+				{
+					availableMessengers.Add(busyMessengers[i]);
+					busyMessengers.RemoveAt(i);
+				}
 			}
 		}
+	}
+
+	private bool IsOccupied(Vector3Int cell)
+	{
+		bool res = false;
+
+		foreach (var mess in availableMessengers)
+		{
+			res |= mess.CurrentPosition() == cell;
+		}
+
+		return res;
+	}
+
+	private List<Vector3Int> HQFreeCells()
+	{
+		var res = new List<Vector3Int>(hq.cellsOccupied);
+
+		foreach (var mess in availableMessengers)
+		{
+			res.Remove(mess.CurrentPosition());
+		}
+
+		return res;
+	}
+
+
+	private MessengerAI FindClickedMessenger(Vector3Int cell)
+	{
+		foreach (var mes in availableMessengers)
+		{
+			if (mes.CurrentPosition() == cell)
+				return mes;
+		}
+
+		return null;
 	}
 
 	private bool CheckMessageValidity(Vector3Int cell)
@@ -123,13 +177,11 @@ public class InputManager : MonoBehaviour
 					if (context.performed)
 					{
 						var cell = CellClicked();
+						currentMessenger = FindClickedMessenger(cell);
 
-						//Debug.Log("Mouse clicked " + cell);
-
-						if (hq.cellsOccupied.Contains(cell))
+						if (hq.cellsOccupied.Contains(cell) && currentMessenger != null)
 						{
 							messageRoute.Add(cell);
-							//highlight.SetTile(cell, messageTile);
 							state = MessageState.MESSAGE_PATH;
 						}
 
@@ -279,18 +331,16 @@ public class InputManager : MonoBehaviour
 	{
 		if (state == MessageState.COMMAND_START)
 		{
-			var m = availableMessengers[0];
-
-			availableMessengers.RemoveAt(0);
-			busyMessengers.Add(m);
-			Debug.Log(busyMessengers.Count);
+			availableMessengers.Remove(currentMessenger);
+			busyMessengers.Add(currentMessenger);
+			//Debug.Log(busyMessengers.Count);
 
 			foreach (var comm in commands)
 			{
-				m.AddMessage(comm.Key, comm.Value);
+				currentMessenger.AddMessage(comm.Key, comm.Value);
 			}
 
-			m.StartPath(messageRoute);
+			currentMessenger.StartPath(messageRoute);
 			Debug.Log("Messenger sent");
 			Clean();
 		}
