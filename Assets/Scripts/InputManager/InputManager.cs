@@ -95,7 +95,7 @@ public class InputManager : MonoBehaviour
 			{
 				if (IsOccupied(busyMessengers[i].CurrentPosition()))
 				{
-					var free = HQFreeCells();
+					var free = HQFreeAdjacentCells(busyMessengers[i].CurrentPosition());
 					//Debug.Log(free.Count);
 					var rand = Random.Range(0, free.Count);
 					//Debug.Log(rand);
@@ -128,13 +128,20 @@ public class InputManager : MonoBehaviour
 		return res;
 	}
 
-	private List<Vector3Int> HQFreeCells()
+	private List<Vector3Int> HQFreeAdjacentCells(Vector3Int cell)
 	{
 		var res = new List<Vector3Int>(hq.cellsOccupied);
 
 		foreach (var mess in availableMessengers)
 		{
 			res.Remove(mess.CurrentPosition());
+		}
+
+		var n = NeighboursOf(cell);
+		foreach (var c in hq.cellsOccupied)
+		{
+			if (!n.Contains(c))
+				res.Remove(c);
 		}
 
 		return res;
