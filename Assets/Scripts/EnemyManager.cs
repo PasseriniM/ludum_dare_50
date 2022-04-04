@@ -141,6 +141,29 @@ public class EnemyManager : MonoBehaviour
         return targetObject == null;
     }
 
+    public void StopAllEnemies()
+    {
+        System.Predicate<GameObject> predicate = IsNullObject;
+        spawnedEnemies.RemoveAll(predicate);
+
+        for (int i = 0; i < spawnedEnemies.Count; i++)
+        {
+            GameObject spawnedEnemy = spawnedEnemies[i];
+            if (spawnedEnemy != null)
+            {
+                MovingCharacterScript movingScript = spawnedEnemy.GetComponent<MovingCharacterScript>();
+                AttackingCharacter attackingCharacter = spawnedEnemy.GetComponent<AttackingCharacter>();
+                if (!attackingCharacter.IsAttacking() &&
+                    movingScript.pathManager.IsMoving())
+                {
+                    List<Vector3Int> stopPath = new List<Vector3Int>();
+                    stopPath.Add(movingScript.pathManager.currentPosition);
+                    movingScript.StartPath(stopPath);
+                }
+            }
+        }
+    }
+
     private void FixedUpdate()
     {
         System.Predicate<GameObject> predicate = IsNullObject;

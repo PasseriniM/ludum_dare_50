@@ -70,6 +70,11 @@ public class HQCharacterAI : MonoBehaviour
         }
     }
 
+    public bool IsDead()
+    {
+        return state == CurrentState.Dead;
+    }
+
     private void IdleUpdate()
     {
     }
