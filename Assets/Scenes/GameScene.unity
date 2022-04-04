@@ -168,6 +168,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cadaaa8f51cd2594da73c030497baefb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  confirmButton: {fileID: 1911082915}
+  cancelButton: {fileID: 232502079}
   mm: {fileID: 1851915187}
   hq: {fileID: 1465493736}
   highlight: {fileID: 1198181707}
@@ -177,7 +179,7 @@ MonoBehaviour:
   - {fileID: 1814883724}
   - {fileID: 937855106}
   - {fileID: 6291446108911943958}
-  state: 0
+  state: 1
 --- !u!114 &6453800
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -20145,7 +20147,7 @@ GameObject:
   - component: {fileID: 1911082917}
   - component: {fileID: 1911082920}
   m_Layer: 0
-  m_Name: MessageCommandButton
+  m_Name: MessageConfirmButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

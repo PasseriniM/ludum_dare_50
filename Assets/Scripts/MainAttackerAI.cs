@@ -8,6 +8,7 @@ public class MainAttackerAI : MonoBehaviour
     private MovingCharacterScript movingScript;
     private HealthScript healthScript;
     private MapManager mapManager;
+    private ParticleSystem partSys;
 
     private enum CurrentState { Idle, Attacking, Moving, Dead };
     private CurrentState state = CurrentState.Idle;
@@ -18,6 +19,7 @@ public class MainAttackerAI : MonoBehaviour
         attackScript = GetComponent<AttackingCharacter>();
         movingScript = GetComponent<MovingCharacterScript>();
         healthScript = GetComponent<HealthScript>();
+        partSys = GetComponent<ParticleSystem>();
         mapManager = FindObjectOfType<MapManager>();
     }
 
@@ -106,6 +108,7 @@ public class MainAttackerAI : MonoBehaviour
         else if(attackScript.IsAttacking())
         {
             state = CurrentState.Attacking;
+            partSys.Play();
         }
     }
     private void AttackingUpdate()
@@ -119,6 +122,7 @@ public class MainAttackerAI : MonoBehaviour
         if (!attackScript.IsAttacking())
         {
             state = CurrentState.Idle;
+            partSys.Stop();
         }
     }
     private void MovingUpdate()
@@ -133,6 +137,7 @@ public class MainAttackerAI : MonoBehaviour
             newPath.Add(movingScript.pathManager.currentPosition);
             movingScript.StartPath(newPath);
             state = CurrentState.Attacking;
+            partSys.Play();
         }
         else
         {

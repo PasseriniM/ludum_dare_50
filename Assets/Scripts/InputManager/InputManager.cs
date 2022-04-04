@@ -15,6 +15,14 @@ public enum MessageState
 
 public class InputManager : MonoBehaviour
 {
+	[Header("Control Buttons")]
+	[SerializeField]
+	private GameObject confirmButton;
+	[SerializeField]
+	private GameObject cancelButton;
+
+
+	[Header("Map Elements")]
 	[SerializeField]
 	private MapManager mm;
 	[SerializeField]
@@ -29,7 +37,7 @@ public class InputManager : MonoBehaviour
 	private List<MessengerAI> availableMessengers;
 	private List<MessengerAI> busyMessengers = new List<MessengerAI>();
 
-	public MessageState state = MessageState.DISABLED;
+	public MessageState state = MessageState.MESSAGE_START;
 
 	private List<Vector3Int> messageRoute = new List<Vector3Int>();
 	private Dictionary<Vector3Int, List<Vector3Int>> commands = new Dictionary<Vector3Int, List<Vector3Int>>();
@@ -40,11 +48,21 @@ public class InputManager : MonoBehaviour
 	{
 		switch (state)
 		{
+			case (MessageState.DISABLED):
+				{
+					confirmButton.SetActive(false);
+					cancelButton.SetActive(false);
+
+					if (availableMessengers.Count > 0)
+						state = MessageState.MESSAGE_START;
+
+					break;
+				}
 			case (MessageState.MESSAGE_PATH):
 				{
 					var cell = CellClicked();
 
-					if (CheckValidity(cell))
+					if (CheckMessageValidity(cell))
 					{
 						AddToMessage(cell);
 					}
@@ -54,7 +72,7 @@ public class InputManager : MonoBehaviour
 				{
 					var cell = CellClicked();
 
-					if (CheckValidity(currentCommand, cell))
+					if (CheckCommandValidity(currentCommand, cell))
 					{
 						AddToCommand(currentCommand, cell);
 					}
@@ -80,19 +98,17 @@ public class InputManager : MonoBehaviour
 		}
 	}
 
-	private bool CheckValidity(Vector3Int cell)
+	private bool CheckMessageValidity(Vector3Int cell)
 	{
 		var lastCell = messageRoute[messageRoute.Count - 1];
 
 		return cell != lastCell && cell != previousCell && NeighboursOf(lastCell).Contains(cell);
 	}
 
-	private bool CheckValidity(Vector3Int key, Vector3Int cell)
+	private bool CheckCommandValidity(Vector3Int key, Vector3Int cell)
 	{
 		var comm = commands[key];
 		var lastCell = comm[comm.Count - 1];
-
-
 
 		return cell != lastCell && cell != previousCell && !hq.cellsOccupied.Contains(cell) && NeighboursOf(lastCell).Contains(cell);
 	}
@@ -125,9 +141,11 @@ public class InputManager : MonoBehaviour
 				{
 					if (context.canceled)
 					{
-						if (hq.cellsOccupied.Contains(messageRoute[messageRoute.Count - 1]))
+						if (hq.cellsOccupied.Contains(messageRoute[messageRoute.Count - 1]) && messageRoute.Count > 1)
 						{
 							Debug.Log("Valid Route");
+							confirmButton.SetActive(true);
+							cancelButton.SetActive(true);
 							state = MessageState.COMMAND_START;
 						}
 						else
@@ -256,45 +274,30 @@ public class InputManager : MonoBehaviour
 		}
 	}
 
-	public void ButtonController()
+
+	public void ConfirmMessage()
 	{
-
-		switch (state)
+		if (state == MessageState.COMMAND_START)
 		{
-			case (MessageState.DISABLED):
-				{
-					if (availableMessengers.Count > 0)
-						state = MessageState.MESSAGE_START;
-					break;
-				}
-			case (MessageState.MESSAGE_START):
-				{
-					Reset();
-					state = MessageState.DISABLED;
-					break;
-				}
-			case (MessageState.COMMAND_START):
-				{
-					var m = availableMessengers[0];
+			var m = availableMessengers[0];
 
-					availableMessengers.RemoveAt(0);
-					busyMessengers.Add(m);
-					Debug.Log(busyMessengers.Count);
+			availableMessengers.RemoveAt(0);
+			busyMessengers.Add(m);
+			Debug.Log(busyMessengers.Count);
 
-					foreach (var comm in commands)
-					{
-						m.AddMessage(comm.Key, comm.Value);
-					}
+			foreach (var comm in commands)
+			{
+				m.AddMessage(comm.Key, comm.Value);
+			}
 
-					m.StartPath(messageRoute);
-					Debug.Log("Messenger sent");
-					Clean();
-					break;
-				}
-			default:
-				{
-					break;
-				}
+			m.StartPath(messageRoute);
+			Debug.Log("Messenger sent");
+			Clean();
 		}
+	}
+
+	public void CancelMessage()
+	{
+		Reset();
 	}
 }
