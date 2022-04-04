@@ -55,10 +55,25 @@ public class EnemyManager : MonoBehaviour
         if(Random.Range(0f,1f)>0.5f)
         {
             position.x = Mathf.RoundToInt(Random.Range(SpawnGridXMin, SpawnGridXMax));
+            if (Random.Range(0f, 1f) > 0.5f)
+            {
+                position.y = SpawnGridYMin;
+            }
+            else
+            {
+                position.y = SpawnGridYMax;
+            }
         }
         else
         {
-            position.y = Mathf.RoundToInt(Random.Range(SpawnGridYMin, SpawnGridYMax));
+            position.y = Mathf.RoundToInt(Random.Range(SpawnGridYMin, SpawnGridYMax)); if (Random.Range(0f, 1f) > 0.5f)
+            {
+                position.x = SpawnGridXMin;
+            }
+            else
+            {
+                position.x = SpawnGridXMax;
+            }
         }
         return position;
     }
