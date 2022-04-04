@@ -357,7 +357,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &232502080
 RectTransform:
   m_ObjectHideFlags: 0
@@ -424,7 +424,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 6453799}
         m_TargetAssemblyTypeName: InputManager, Assembly-CSharp
-        m_MethodName: Reset
+        m_MethodName: CancelMessage
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -3902,7 +3902,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Message
+  m_Text: Send Message
 --- !u!222 &1516534310
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -20145,14 +20145,13 @@ GameObject:
   - component: {fileID: 1911082919}
   - component: {fileID: 1911082918}
   - component: {fileID: 1911082917}
-  - component: {fileID: 1911082920}
   m_Layer: 0
   m_Name: MessageConfirmButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1911082916
 RectTransform:
   m_ObjectHideFlags: 0
@@ -20219,7 +20218,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 6453799}
         m_TargetAssemblyTypeName: InputManager, Assembly-CSharp
-        m_MethodName: ButtonController
+        m_MethodName: ConfirmMessage
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -20267,19 +20266,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1911082915}
   m_CullTransparentMesh: 1
---- !u!114 &1911082920
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1911082915}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f8c70ae6feed844469b9bfdf128b254c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  cancelButton: {fileID: 232502079}
 --- !u!1001 &1920637044
 PrefabInstance:
   m_ObjectHideFlags: 0
