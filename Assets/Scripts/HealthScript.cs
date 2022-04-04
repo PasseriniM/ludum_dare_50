@@ -6,20 +6,25 @@ public class HealthScript : MonoBehaviour
 {
     public float health;
     private MapManager mapManager;
+    private MovingCharacterScript movingScript;
 
     private float startHealth;
     private void Awake()
     {
         startHealth = health;
         mapManager = FindObjectOfType<MapManager>();
+        movingScript = GetComponent<MovingCharacterScript>();
     }
 
     private void FixedUpdate()
     {
-        float poisonModifier = mapManager.GetPoisonModifier(mapManager.map.WorldToCell(transform.position));
-        if(poisonModifier!=0)
+        if(movingScript!=null)
         {
-            ApplyDamage(poisonModifier * Time.fixedDeltaTime);
+            float poisonModifier = mapManager.GetPoisonModifier(movingScript.pathManager.currentPosition);
+            if (poisonModifier != 0)
+            {
+                ApplyDamage(poisonModifier * Time.fixedDeltaTime);
+            }
         }
     }
 
