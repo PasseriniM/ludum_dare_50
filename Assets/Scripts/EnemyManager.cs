@@ -43,6 +43,13 @@ public class EnemyManager : MonoBehaviour
                     minDist = dist;
                     result = directions[i];
                 }
+                else if (dist == minDist)
+                {
+                    if (Random.Range(0f, 1f) > 0.5f)
+                    {
+                        result = directions[i];
+                    }
+                }
             }
             return result;
         }

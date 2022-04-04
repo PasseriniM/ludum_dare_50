@@ -18940,6 +18940,10 @@ PrefabInstance:
       value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 8038932756338203751, guid: 82accb8effd312443be92164e3e389aa, type: 3}
+      propertyPath: spawnIntervalInitial
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 8038932756338203751, guid: 82accb8effd312443be92164e3e389aa, type: 3}
       propertyPath: enemyList.Array.data[1]
       value: 
       objectReference: {fileID: 1407702094454625944, guid: fdf0ef78acacbf741b9055426ca00c25, type: 3}
