@@ -4,9 +4,10 @@ using UnityEngine;
 using UnityEngine.Tilemaps;
 using UnityEngine.InputSystem;
 
-enum MessageDefinition
+public enum MessageState
 {
 	DISABLED,
+	MESSAGE_START,
 	MESSAGE_PATH,
 	COMMAND_START,
 	COMMAND_PATH
@@ -28,7 +29,7 @@ public class InputManager : MonoBehaviour
 	private List<MessengerAI> availableMessengers;
 	private List<MessengerAI> busyMessengers = new List<MessengerAI>();
 
-	private MessageDefinition msg = MessageDefinition.DISABLED;
+	public MessageState state = MessageState.DISABLED;
 
 	private List<Vector3Int> messageRoute = new List<Vector3Int>();
 	private Dictionary<Vector3Int, List<Vector3Int>> commands = new Dictionary<Vector3Int, List<Vector3Int>>();
@@ -37,9 +38,9 @@ public class InputManager : MonoBehaviour
 
 	private void Update()
 	{
-		switch (msg)
+		switch (state)
 		{
-			case (MessageDefinition.MESSAGE_PATH):
+			case (MessageState.MESSAGE_PATH):
 				{
 					var cell = CellClicked();
 
@@ -49,11 +50,7 @@ public class InputManager : MonoBehaviour
 					}
 					break;
 				}
-			case (MessageDefinition.COMMAND_START):
-				{
-					break;
-				}
-			case (MessageDefinition.COMMAND_PATH):
+			case (MessageState.COMMAND_PATH):
 				{
 					var cell = CellClicked();
 
@@ -90,55 +87,9 @@ public class InputManager : MonoBehaviour
 	public void ClickTest(InputAction.CallbackContext context)
 	{
 
-		switch (msg)
+		switch (state)
 		{
-			case (MessageDefinition.MESSAGE_PATH):
-				{
-					if (context.canceled)
-					{
-						if (hq.cellsOccupied.Contains(messageRoute[messageRoute.Count - 1]))
-						{
-							Debug.Log("Valid Route");
-							msg = MessageDefinition.COMMAND_START;
-						}
-						else
-						{
-
-							Reset();
-							Debug.Log("Invalid Route");
-						}
-					}
-
-					break;
-				}
-			case (MessageDefinition.COMMAND_START):
-				{
-					if (context.performed)
-					{
-						var cell = CellClicked();
-
-						if (messageRoute.Contains(cell))
-						{
-							commands.Add(cell, new List<Vector3Int>());
-							commands[cell].Add(cell);
-							previousCell = cell;
-							currentCommand = cell;
-							msg = MessageDefinition.COMMAND_PATH;
-						}
-					}
-
-					break;
-				}
-			case (MessageDefinition.COMMAND_PATH):
-				{
-					if (context.canceled)
-					{
-						msg = MessageDefinition.COMMAND_START;
-					}
-
-					break;
-				}
-			default:
+			case (MessageState.MESSAGE_START):
 				{
 					if (context.performed)
 					{
@@ -150,11 +101,61 @@ public class InputManager : MonoBehaviour
 						{
 							messageRoute.Add(cell);
 							//highlight.SetTile(cell, messageTile);
-							msg = MessageDefinition.MESSAGE_PATH;
+							state = MessageState.MESSAGE_PATH;
 						}
 
 					}
 
+					break;
+				}
+			case (MessageState.MESSAGE_PATH):
+				{
+					if (context.canceled)
+					{
+						if (hq.cellsOccupied.Contains(messageRoute[messageRoute.Count - 1]))
+						{
+							Debug.Log("Valid Route");
+							state = MessageState.COMMAND_START;
+						}
+						else
+						{
+
+							Reset();
+							Debug.Log("Invalid Route");
+						}
+					}
+
+					break;
+				}
+			case (MessageState.COMMAND_START):
+				{
+					if (context.performed)
+					{
+						var cell = CellClicked();
+
+						if (messageRoute.Contains(cell))
+						{
+							commands.Add(cell, new List<Vector3Int>());
+							commands[cell].Add(cell);
+							previousCell = cell;
+							currentCommand = cell;
+							state = MessageState.COMMAND_PATH;
+						}
+					}
+
+					break;
+				}
+			case (MessageState.COMMAND_PATH):
+				{
+					if (context.canceled)
+					{
+						state = MessageState.COMMAND_START;
+					}
+
+					break;
+				}
+			default:
+				{
 					break;
 				}
 		}
@@ -210,41 +211,67 @@ public class InputManager : MonoBehaviour
 		return res;
 	}
 
-	private void Reset()
+	public void Reset()
 	{
-		msg = MessageDefinition.DISABLED;
 		messageRoute.Clear();
 		commands.Clear();
 		highlight.ClearAllTiles();
+		state = MessageState.DISABLED;
 	}
 
-	private void Clean()
+	public void Clean()
 	{
-		msg = MessageDefinition.DISABLED;
 		messageRoute = new List<Vector3Int>();
 		commands = new Dictionary<Vector3Int, List<Vector3Int>>();
 		highlight.ClearAllTiles();
+		state = MessageState.DISABLED;
 	}
 
-	public void ConfirmMessage()
+	private void ClearPath(List<Vector3Int> path)
 	{
-		Debug.Log("Message Confirmed");
-		if (msg == MessageDefinition.COMMAND_START)
+		foreach (var pos in path)
 		{
+			highlight.SetTile(pos, null);
+		}
+	}
 
-			var m = availableMessengers[0];
+	public void ButtonController()
+	{
 
-			availableMessengers.RemoveAt(0);
-			busyMessengers.Add(m);
+		switch (state)
+		{
+			case (MessageState.DISABLED):
+				{
+					state = MessageState.MESSAGE_START;
+					break;
+				}
+			case (MessageState.MESSAGE_START):
+				{
+					Reset();
+					state = MessageState.DISABLED;
+					break;
+				}
+			case (MessageState.COMMAND_START):
+				{
+					var m = availableMessengers[0];
 
-			foreach (var comm in commands)
-			{
-				m.AddMessage(comm.Key, comm.Value);
-			}
+					availableMessengers.RemoveAt(0);
+					busyMessengers.Add(m);
 
-			m.StartPath(messageRoute);
-			Debug.Log("Messenger sent");
-			Clean();
+					foreach (var comm in commands)
+					{
+						m.AddMessage(comm.Key, comm.Value);
+					}
+
+					m.StartPath(messageRoute);
+					Debug.Log("Messenger sent");
+					Clean();
+					break;
+				}
+			default:
+				{
+					break;
+				}
 		}
 	}
 }
