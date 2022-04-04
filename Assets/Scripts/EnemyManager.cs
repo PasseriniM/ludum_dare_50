@@ -107,7 +107,7 @@ public class EnemyManager : MonoBehaviour
     // Start is called before the first frame update
     private void SpawnRandomCharacter()
     {
-        int characterToSpawnIndex = Mathf.RoundToInt(Random.Range(0, enemyList.Count-1));
+        int characterToSpawnIndex = Mathf.RoundToInt(Random.Range(0, enemyList.Count));
         GameObject objectPrefab = enemyList[characterToSpawnIndex];
         Vector3Int startCell = GetRandomStartPosition();
 

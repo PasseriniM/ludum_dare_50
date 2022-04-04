@@ -8,6 +8,10 @@ public class MessengerAI : MonoBehaviour
     private FactionScript factionScript;
     private HealthScript healthScript;
     private MapManager mapManager;
+    private AudioSource audioSource;
+
+    [SerializeField]
+    private AudioClip commandAudio;
 
     private Dictionary<Vector3Int, List<Vector3Int>> messages = new Dictionary<Vector3Int, List<Vector3Int>>();
 
@@ -20,6 +24,7 @@ public class MessengerAI : MonoBehaviour
         movingScript = GetComponent<MovingCharacterScript>();
         healthScript = GetComponent<HealthScript>();
         factionScript = GetComponent<FactionScript>();
+        audioSource = GetComponentInChildren<AudioSource>();
         mapManager = FindObjectOfType<MapManager>();
     }
 
@@ -87,6 +92,7 @@ public class MessengerAI : MonoBehaviour
 
             if(messageDelivered)
             {
+                audioSource.PlayOneShot(commandAudio);
                 messages.Remove(movingScript.pathManager.currentPosition);
             }
         }

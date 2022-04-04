@@ -12,11 +12,13 @@ public class GameOverScript : MonoBehaviour
     private HQCharacterAI hqCharacter;
 
     private EnemyManager enemyManager;
+    private AudioSource audioSource;
 
     private void Awake()
     {
         hqCharacter = FindObjectOfType<HQCharacterAI>();
         enemyManager = FindObjectOfType<EnemyManager>();
+        audioSource = GetComponent<AudioSource>();
     }
 
     private void FixedUpdate()
@@ -27,6 +29,8 @@ public class GameOverScript : MonoBehaviour
             textGameOver.enabled = true;
             enemyManager.StopAllEnemies();
             enemyManager.enabled = false;
+            audioSource.Play();
+            this.enabled = false;
         }
     }
 }
