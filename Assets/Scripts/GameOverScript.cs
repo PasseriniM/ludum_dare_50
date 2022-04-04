@@ -13,7 +13,8 @@ public class GameOverScript : MonoBehaviour
 
     private EnemyManager enemyManager;
     private AudioSource audioSource;
-
+    [SerializeField]
+    private AudioClip deathClip;
     private void Awake()
     {
         hqCharacter = FindObjectOfType<HQCharacterAI>();
@@ -29,7 +30,8 @@ public class GameOverScript : MonoBehaviour
             textGameOver.enabled = true;
             enemyManager.StopAllEnemies();
             enemyManager.enabled = false;
-            audioSource.Play();
+            audioSource.Stop();
+            audioSource.PlayOneShot(deathClip, 0.5f);
             this.enabled = false;
         }
     }
