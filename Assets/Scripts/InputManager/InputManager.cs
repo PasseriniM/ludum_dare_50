@@ -174,6 +174,13 @@ public class InputManager : MonoBehaviour
 		return cell != lastCell && cell != previousCell && !hq.cellsOccupied.Contains(cell) && NeighboursOf(lastCell).Contains(cell);
 	}
 
+	Vector2 pointerPosition;
+
+	public void Point(InputAction.CallbackContext context)
+    {
+		pointerPosition = context.ReadValue<Vector2>();
+    }
+
 	public void ClickTest(InputAction.CallbackContext context)
 	{
 
@@ -278,8 +285,8 @@ public class InputManager : MonoBehaviour
 
 	private Vector3Int CellClicked()
 	{
-		var pos = Mouse.current.position.ReadValue();
-		var wPos = Camera.main.ScreenToWorldPoint(pos);
+		//var pointerPosition = Mouse.current.position.ReadValue();
+		var wPos = Camera.main.ScreenToWorldPoint(pointerPosition);
 		return mm.map.WorldToCell(wPos);
 	}
 

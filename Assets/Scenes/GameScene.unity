@@ -218,7 +218,19 @@ MonoBehaviour:
     m_ActionId: 98dc44dc-2cc2-4a30-b4aa-ae185562e8ff
     m_ActionName: UI/Cancel
   - m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 6453799}
+        m_TargetAssemblyTypeName: InputManager, Assembly-CSharp
+        m_MethodName: Point
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_ActionId: ba91d27a-cca1-490c-b45f-36f4462c1778
     m_ActionName: UI/Point[/Mouse/position]
   - m_PersistentCalls:
@@ -246,19 +258,7 @@ MonoBehaviour:
     m_ActionId: c688014c-49e0-4082-bbca-4668f8d2cd73
     m_ActionName: UI/MiddleClick[/Mouse/middleButton]
   - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 6453799}
-        m_TargetAssemblyTypeName: InputManager, Assembly-CSharp
-        m_MethodName: ClickTest
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
     m_ActionId: b926361d-91df-44a0-a617-ac4713238848
     m_ActionName: UI/RightClick[/Mouse/rightButton]
   - m_PersistentCalls:
@@ -700,7 +700,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 19d0c58c6b1ccf44db971a2ba5b1f081, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 0.2
+  m_Volume: 0.1
   m_Pitch: 1
   Loop: 1
   Mute: 0
