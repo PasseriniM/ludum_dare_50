@@ -78,7 +78,7 @@ public class PathAndPositionManager
         {
             //we need to check if we're close enough to the center of the cell
              Vector3 distanceVec = GetCurrentTarget()-currentWorldPosition;
-             if(distanceVec.sqrMagnitude<0.00001f)
+             if(distanceVec.sqrMagnitude<0.0000000001f)
              {
                 currentIndex++;
                 UpdateFacingDirection();

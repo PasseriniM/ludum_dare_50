@@ -13,9 +13,6 @@ MonoBehaviour:
   m_Name: SwampTileData
   m_EditorClassIdentifier: 
   tiles:
-  - {fileID: 11400000, guid: 71be31d7bce3ed441971c7f80862ad6a, type: 2}
-  - {fileID: 11400000, guid: 3a55a6ef722978149a260ffb86757e3c, type: 2}
-  - {fileID: 11400000, guid: db462c207fe8f604e9b763d154761daa, type: 2}
-  - {fileID: 11400000, guid: 64d247b2bc4e78d4fb6a5268c4c4e930, type: 2}
+  - {fileID: 11400000, guid: acc87c72f567a994b870a1c3987b709a, type: 2}
   speedModifier: 0.5
   poisonModifier: 1

@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tiles:
   - {fileID: 11400000, guid: be593d0cc6724164ba4766f3bdd88857, type: 2}
-  speedModifier: 0
+  speedModifier: 1
   poisonModifier: -1
