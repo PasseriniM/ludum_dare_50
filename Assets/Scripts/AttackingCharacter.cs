@@ -105,7 +105,7 @@ public class AttackingCharacter : MonoBehaviour
             if(targetMovingScript!=null)
             {
                 Vector3Int dir = targetMovingScript.pathManager.currentPosition - movingCharacter.pathManager.currentPosition;
-                if (!LogicGrid.IsValidDirection(movingCharacter.pathManager.currentPosition, dir))
+                if (!LogicGrid.IsValidAdjacent(movingCharacter.pathManager.currentPosition, dir))
                 {
                     currentTarget = null;
                     return;
