@@ -65,6 +65,19 @@ public class InputManager : MonoBehaviour
 					break;
 				}
 		}
+		UpdateMessengerState();
+	}
+
+	private void UpdateMessengerState()
+	{
+		for (int i = busyMessengers.Count - 1; i >= 0; i--)
+		{
+			if (busyMessengers[i].HasArrived())
+			{
+				availableMessengers.Add(busyMessengers[i]);
+				busyMessengers.RemoveAt(i);
+			}
+		}
 	}
 
 	private bool CheckValidity(Vector3Int cell)
@@ -242,7 +255,8 @@ public class InputManager : MonoBehaviour
 		{
 			case (MessageState.DISABLED):
 				{
-					state = MessageState.MESSAGE_START;
+					if (availableMessengers.Count > 0)
+						state = MessageState.MESSAGE_START;
 					break;
 				}
 			case (MessageState.MESSAGE_START):
@@ -257,6 +271,7 @@ public class InputManager : MonoBehaviour
 
 					availableMessengers.RemoveAt(0);
 					busyMessengers.Add(m);
+					Debug.Log(busyMessengers.Count);
 
 					foreach (var comm in commands)
 					{

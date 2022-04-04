@@ -154,4 +154,9 @@ public class MessengerAI : MonoBehaviour
         mapManager.logicGrid.Unsubscribe(lastPosition, gameObject);
         Destroy(gameObject);
     }
+
+    public bool HasArrived()
+	{
+        return movingScript.pathManager.HasArrived();
+	}
 }
